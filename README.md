@@ -1,3 +1,5 @@
+[![Carbon Budget Gate](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/carbon-budget.yml/badge.svg)](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/carbon-budget.yml)
+
 # green-ai-sizer-mvp
 
 Azure-led **Responsible AI Sizing** MVP for climate-critical services: **routing + caching + inference governance** plus a **Carbon Budget Gate** in GitHub Actions.
