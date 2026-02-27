@@ -1,41 +1,83 @@
 [![Carbon Budget Gate](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/carbon-budget.yml/badge.svg)](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/carbon-budget.yml)
 
-# green-ai-sizer-mvp
+# Green AI Sizer MVP
 
-Azure-led **Responsible AI Sizing** MVP for climate-critical services: **routing + caching + inference governance** plus a **Carbon Budget Gate** in GitHub Actions.
+A governance-first toolkit and evidence pack for **Responsible AI Sizing** (approved topic: *reducing footprint through smaller models, caching, and inference control*).  
+It provides a reproducible method to **estimate and govern CO₂e intensity per 1,000 AI requests** and to document the technical, governance, and risk assumptions required for **climate-critical digital services** operating under **heatwaves and grid volatility**.
 
-## Why this matters
-Heatwaves and grid volatility increase operational pressure on digital services. AI inference can become an “always-on” baseline load and push carbon emissions upward unless demand is governed.
+This repository is intentionally built as a **reviewable product artefact**: assumptions are explicit, calculations are versioned, CI enforces a measurable target, and the evidence pack maps directly to the report sections and learning outcomes.
 
-## What this MVP demonstrates
-- **Routing (small-first)**: simple requests go to a “small” path, complex ones escalate to a “large” path.
-- **Caching**: repeat requests are served from cache to reduce compute.
-- **Inference governance**: budget mindset (quotas/policies) represented as CI checks.
-- **Evidence**: baseline vs improved metrics + CO₂e workbook.
+---
 
-## Architecture (high-level)
-Gateway → Orchestrator (routing + cache check) → Small path / Large path → Observability → Workbook (CO₂e)
+## Table of contents
+- [Problem context](#problem-context)
+- [What this repository delivers](#what-this-repository-delivers)
+- [Product scope](#product-scope)
+- [Quickstart](#quickstart)
+- [How the Carbon Budget Gate works](#how-the-carbon-budget-gate-works)
+- [Evidence and appendices](#evidence-and-appendices)
+- [Alignment with learning outcomes](#alignment-with-learning-outcomes)
+- [Architecture](#architecture)
+- [Configuration](#configuration)
+- [Verification checklist](#verification-checklist)
+- [Roadmap](#roadmap)
+- [Versioning](#versioning)
+- [License](#license)
 
-> Azure implementation will be added in the practical phase with minimal cost.
+---
 
-## Repo structure
-- `app/` — MVP service code (added in Phase 2)
-- `docs/` — appendices (C/E/F/G) and architecture diagram notes
-- `workbook/` — Appendix D (baseline vs improved) + CO₂e calculator
-- `.github/workflows/` — Carbon Budget Gate (GitHub Actions)
+## Problem context
 
-## Appendices (mapped to the report)
-- **Appendix C**: Assumptions & system boundary (`docs/appendix-c-boundary.md`)
-- **Appendix D**: Carbon calculation workbook (`workbook/appendix-d-baseline-improved.csv`)
-- **Appendix E**: Stakeholders + RACI (`docs/appendix-e-raci.md`)
-- **Appendix F**: KPI set (`docs/appendix-f-kpis.md`)
-- **Appendix G**: Risk register (`docs/appendix-g-risk-register.md`)
+Climate-focused organisations increasingly depend on always-on digital services (monitoring, reporting, coordination). Under **heatwaves**, cooling demand rises and infrastructure stress increases; under **grid volatility**, carbon intensity and operational constraints fluctuate.  
+AI-enabled services can improve responsiveness, but **uncontrolled inference demand** can become a baseline load (“always-on”), increasing emissions and cost unless it is governed through sizing, caching, and routing.
 
-## How the Carbon Budget Gate works
-A GitHub Action reads the workbook CSV and computes:
-- **gCO₂e per 1,000 requests**
-If the value exceeds the defined budget, the workflow fails (simulating governance).
+**Responsible AI Sizing** aims to:
+- reduce unnecessary high-cost inference,
+- prevent rebound effects (efficiency → more usage → higher total emissions),
+- keep reliability and security acceptable during peak climate stress.
 
-## Status
-- Phase 1 (GitHub): in progress ✅
-- Phase 2 (Azure MVP test + metrics): next
+---
+
+## What this repository delivers
+
+### 1) Carbon Budget Gate (CI governance)
+A GitHub Actions workflow computes **gCO₂e / 1,000 requests** from the workbook and fails CI if the threshold is exceeded.  
+This provides an enforceable control to prevent silent footprint growth.
+
+### 2) Carbon calculation workbook + calculator (reproducible LO4 evidence)
+- `workbook/appendix-d-baseline-improved.csv` stores **baseline vs improved** scenarios.
+- `workbook/calc_co2e.py` computes:
+  - CO₂e intensity per 1,000 requests
+  - total daily CO₂e
+  - reduction estimate vs baseline
+- Results are surfaced in the GitHub Actions run summary for traceability.
+
+### 3) Evidence pack (Appendices C–G)
+A structured set of appendices designed for Overleaf/QUB template insertion:
+- system boundary and assumptions,
+- stakeholder governance,
+- KPI definitions,
+- risk register with mitigation and burden-shifting logic.
+
+---
+
+## Product scope
+
+### This repository provides
+- A **measurable governance mechanism** (budget enforcement in CI).
+- A **reproducible calculation method** (workbook + calculator).
+- A **traceable evidence layer** aligned to the report requirements (appendices).
+
+### This repository does not claim (by design)
+- **Production-grade carbon accounting**: energy-per-request values are scenario inputs and must be validated with telemetry (planned Azure MVP).
+- Full lifecycle accounting (embodied emissions, full PUE modelling, end-user devices) unless explicitly added to Appendix C.
+
+This scope boundary is deliberate to keep the artefact auditable and aligned with the assignment’s system-boundary approach.
+
+---
+
+## Quickstart
+
+### Run locally (or in Codespaces)
+```bash
+python workbook/calc_co2e.py 200
