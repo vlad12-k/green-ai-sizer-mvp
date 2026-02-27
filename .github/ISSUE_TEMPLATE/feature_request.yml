@@ -1,0 +1,79 @@
+name: Feature request
+description: Suggest an improvement (routing, caching, carbon-aware scheduling, UI, governance)
+title: "[FEAT] "
+labels: ["enhancement"]
+assignees:
+  - vlad12-k
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to propose improvements. Keep it measurable: tie changes to KPIs (Appendix F).
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature category
+      options:
+        - Routing (small-first / fallback)
+        - Caching (semantic / TTL / invalidation)
+        - Carbon-aware scheduling (NESO signal)
+        - Governance (budgets / quotas / policy)
+        - Metrics / Observability
+        - UI / Visualisation (GitHub Pages)
+        - Documentation / Appendices
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal / problem statement
+      description: What problem are we solving and why does it matter?
+      placeholder: "We need to reduce large-route calls during peak carbon intensity hours..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the approach in enough detail to implement.
+      placeholder: "Add a carbon-intensity threshold that forces cache-first mode..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected impact (KPIs)
+      description: Specify which KPIs will change and how (Appendix F).
+      value: |
+        - gCO₂e/1k requests:
+        - Cache hit rate:
+        - % small routing:
+        - p95 latency:
+    validations:
+      required: true
+
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Trade-offs / risks
+      description: What might get worse? Where could the impact shift elsewhere?
+      placeholder: "Higher cache hit may increase storage; stricter limits may increase user friction..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      options:
+        - label: KPI measurement updated (Appendix F or workflow summary)
+          required: true
+        - label: Workbook updated (Appendix D baseline vs improved / sensitivity)
+          required: false
+        - label: Documentation updated (appendices or README)
+          required: false
