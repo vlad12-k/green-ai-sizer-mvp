@@ -7,7 +7,6 @@ It provides a reproducible method to **estimate and govern CO₂e intensity per 
 
 This repository is intentionally built as a **reviewable product artefact**: assumptions are explicit, calculations are versioned, CI enforces a measurable target, and the evidence pack maps directly to the report sections and learning outcomes.
 
-
 ---
 
 ## Table of contents
