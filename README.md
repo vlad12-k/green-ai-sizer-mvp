@@ -2,83 +2,93 @@
 
 # Green AI Sizer MVP
 
-A governance-first toolkit and evidence pack for **Responsible AI Sizing** (approved topic: *reducing footprint through smaller models, caching, and inference control*).  
-It provides a reproducible method to **estimate and govern CO₂e intensity per 1,000 AI requests** and to document the technical, governance, and risk assumptions required for **climate-critical digital services** operating under **heatwaves and grid volatility**.
+Governance-first toolkit and evidence pack for **Responsible AI Sizing** (approved topic: reducing footprint via smaller models, caching, and inference control).  
+This repository operationalises a practical governance question:
 
-This repository is intentionally built as a **reviewable product artefact**: assumptions are explicit, calculations are versioned, CI enforces a measurable target, and the evidence pack maps directly to the report sections and learning outcomes.
+> **How do we prevent AI usage from silently increasing operational emissions while maintaining service readiness under heatwaves and grid volatility?**
 
+It provides a reproducible method to **estimate and enforce CO₂e intensity per 1,000 AI requests** and documents boundary, assumptions, KPIs, stakeholders, and risks to support auditable decision-making.
 
 ---
 
 ## Table of contents
-- [Problem context](#problem-context)
-- [What this repository delivers](#what-this-repository-delivers)
-- [Product scope](#product-scope)
+- [Context and problem statement](#context-and-problem-statement)
+- [What is shipped in this repository](#what-is-shipped-in-this-repository)
+- [Governance model](#governance-model)
 - [Quickstart](#quickstart)
-- [How the Carbon Budget Gate works](#how-the-carbon-budget-gate-works)
-- [Evidence and appendices](#evidence-and-appendices)
-- [Alignment with learning outcomes](#alignment-with-learning-outcomes)
-- [Architecture](#architecture)
+- [Carbon Budget Gate: how it works](#carbon-budget-gate-how-it-works)
+- [Evidence pack](#evidence-pack)
+- [Assumptions, boundary, and limitations](#assumptions-boundary-and-limitations)
+- [Security and compliance posture](#security-and-compliance-posture)
 - [Configuration](#configuration)
 - [Verification checklist](#verification-checklist)
-- [Roadmap](#roadmap)
+- [Roadmap (next hardening steps)](#roadmap-next-hardening-steps)
+- [Product files](#product-files)
 - [Versioning](#versioning)
 - [License](#license)
 
 ---
 
-## Problem context
+## Context and problem statement
+Climate-critical services increasingly rely on always-on digital systems (monitoring, reporting, coordination). Under **heatwaves**, cooling demand rises and infrastructure stress increases; under **grid volatility**, carbon intensity fluctuates and peak-demand constraints tighten.
 
-Climate-focused organisations increasingly depend on always-on digital services (monitoring, reporting, coordination). Under **heatwaves**, cooling demand rises and infrastructure stress increases; under **grid volatility**, carbon intensity and operational constraints fluctuate.  
-AI-enabled services can improve responsiveness, but **uncontrolled inference demand** can become a baseline load (“always-on”), increasing emissions and cost unless it is governed through sizing, caching, and routing.
+AI-enabled workflows can improve responsiveness, but **uncontrolled inference demand** can become a baseline load (“always-on”), increasing emissions and cost unless governed through:
+- **sizing** (small-first, big-if-needed),
+- **caching** (avoid repeated compute),
+- **inference control** (budgets, routing, policy thresholds).
 
-**Responsible AI Sizing** aims to:
-- reduce unnecessary high-cost inference,
-- prevent rebound effects (efficiency → more usage → higher total emissions),
-- keep reliability and security acceptable during peak climate stress.
-
----
-
-## What this repository delivers
-
-### 1) Carbon Budget Gate (CI governance)
-A GitHub Actions workflow computes **gCO₂e / 1,000 requests** from the workbook and fails CI if the threshold is exceeded.  
-This provides an enforceable control to prevent silent footprint growth.
-
-### 2) Carbon calculation workbook + calculator (reproducible LO4 evidence)
-- `workbook/appendix-d-baseline-improved.csv` stores **baseline vs improved** scenarios.
-- `workbook/calc_co2e.py` computes:
-  - CO₂e intensity per 1,000 requests
-  - total daily CO₂e
-  - reduction estimate vs baseline
-- Results are surfaced in the GitHub Actions run summary for traceability.
-
-### 3) Evidence pack (Appendices C–G)
-A structured set of appendices designed for Overleaf/QUB template insertion:
-- system boundary and assumptions,
-- stakeholder governance,
-- KPI definitions,
-- risk register with mitigation and burden-shifting logic.
+This repository focuses on the **governance layer** first: measurable KPIs + enforceable CI gate + traceable evidence.
 
 ---
 
-## Product scope
+## What is shipped in this repository
 
-### This repository provides
-- A **measurable governance mechanism** (budget enforcement in CI).
-- A **reproducible calculation method** (workbook + calculator).
-- A **traceable evidence layer** aligned to the report requirements (appendices).
+### 1) CI governance: Carbon Budget Gate (required check)
+- GitHub Actions workflow computes **gCO₂e / 1,000 requests** from workbook inputs.
+- CI fails when the **improved** scenario exceeds the budget threshold.
+- Results are surfaced in the GitHub Actions **run summary** (budget, baseline, improved, reduction).
 
-### This repository does not claim (by design)
-- **Production-grade carbon accounting**: energy-per-request values are scenario inputs and must be validated with telemetry (planned Azure MVP).
-- Full lifecycle accounting (embodied emissions, full PUE modelling, end-user devices) unless explicitly added to Appendix C.
+### 2) Reproducible calculation method (workbook + calculator)
+- Workbook: `workbook/appendix-d-baseline-improved.csv`
+- Calculator: `workbook/calc_co2e.py`
+- Outputs:
+  - gCO₂e / 1k requests (baseline + improved)
+  - total gCO₂e/day (baseline + improved)
+  - estimated reduction vs baseline
 
-This scope boundary is deliberate to keep the artefact auditable and aligned with the assignment’s system-boundary approach.
+### 3) Evidence pack (appendix-style documentation)
+Designed for auditability and report insertion:
+- Boundary & assumptions (Appendix C)
+- Stakeholders & RACI (Appendix E)
+- KPI definitions & reporting cadence (Appendix F)
+- Risk register + mitigations (Appendix G)
+
+### 4) Product-grade repository controls
+- `main` is protected via ruleset:
+  - PR-only merges
+  - required checks (carbon-budget; CodeQL if enabled)
+  - force-push blocked
+- Code scanning (CodeQL) and dependency/security controls (where enabled)
+- Reproducible development environment via Codespaces devcontainer
+
+---
+
+## Governance model
+This repo treats sustainability as an enforceable constraint, not a narrative statement.
+
+**Control points**
+1. **Budget definition** (target gCO₂e/1k requests)
+2. **Scenario inputs** (baseline vs improved)
+3. **CI enforcement** (merge blocked if budget exceeded)
+4. **Evidence trail** (run summary + versioned workbook + documented boundary)
+
+**Why this matters**
+Efficiency improvements alone can trigger **rebound effects** (lower cost → higher usage → higher total emissions). The gate is designed to support demand shaping and governance discipline rather than “optimize and hope”.
 
 ---
 
 ## Quickstart
 
-### Run locally (or in Codespaces)
+### Run locally
 ```bash
 python workbook/calc_co2e.py 200
