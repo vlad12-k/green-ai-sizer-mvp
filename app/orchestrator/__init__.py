@@ -1,36 +1,11 @@
-import traceback
+import json
+import random
+import azure.functions as func
 
-# Boot imports (safe)
-try:
-    import json
-    import random
-    import azure.functions as func
-except Exception:
-    _BOOT_ERROR = traceback.format_exc()
-else:
-    _BOOT_ERROR = None
-
-# Router import (safe)
-try:
-    try:
-        # If "app/" is deployed as the Functions root
-        from ml.router import predict_route
-    except Exception:
-        # If repo root is deployed
-        from app.ml.router import predict_route
-except Exception:
-    _ROUTER_IMPORT_ERROR = traceback.format_exc()
-else:
-    _ROUTER_IMPORT_ERROR = None
+from ml.router import predict_route
 
 
-def main(req: "func.HttpRequest") -> "func.HttpResponse":
-    # If imports fail, return the exact traceback (TEMPORARY DEBUG)
-    if _BOOT_ERROR:
-        return func.HttpResponse(_BOOT_ERROR, status_code=500, mimetype="text/plain")
-    if _ROUTER_IMPORT_ERROR:
-        return func.HttpResponse(_ROUTER_IMPORT_ERROR, status_code=500, mimetype="text/plain")
-
+def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
         body = req.get_json()
     except Exception:
@@ -57,10 +32,7 @@ def main(req: "func.HttpRequest") -> "func.HttpResponse":
     cache_hit_rate = max(0.0, min(1.0, cache_hit_rate))
     cache_hit = random.random() < cache_hit_rate
 
-    if force in ("small", "large"):
-        route = force
-    else:
-        route = predict_route(query)
+    route = force if force in ("small", "large") else predict_route(query)
 
     base = 25 if cache_hit else 60
     route_penalty = 20 if route == "small" else 120
@@ -77,7 +49,5 @@ def main(req: "func.HttpRequest") -> "func.HttpResponse":
             "wh_request": wh_request
         }),
         status_code=200,
-        mimetype="application/json",
+        mimetype="application/json"
     )
-
-
