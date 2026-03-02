@@ -92,3 +92,4 @@ Efficiency improvements alone can trigger **rebound effects** (lower cost → hi
 ### Run locally
 ```bash
 python workbook/calc_co2e.py 200
+
