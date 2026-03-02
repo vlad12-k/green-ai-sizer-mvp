@@ -1,0 +1,9 @@
+text,label,reason,source
+"what is the heatwave incident checklist",small,routine retrieval/definition,UKHSA guidance topic
+"give me a short summary of heat-health advice for staff",small,routine summary request,UKHSA guidance topic
+"what is the current grid carbon intensity",small,simple lookup,carbon intensity API context
+"list immediate steps during extreme heat for a clinic",small,procedural steps,UKHSA guidance topic
+"compare two mitigation strategies and explain trade-offs under heat stress",large,requires reasoning & trade-offs,assignment scenario style
+"design a response plan with priorities, roles and escalation",large,planning & multi-step reasoning,incident management style
+"evaluate rebound effects if we reduce inference cost",large,critical analysis required,Green AI / rebound discussion
+"map stakeholders and propose a RACI for sustainable AI governance",large,structured governance reasoning,LO2 governance
