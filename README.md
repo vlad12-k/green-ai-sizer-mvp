@@ -93,3 +93,16 @@ Efficiency improvements alone can trigger **rebound effects** (lower cost → hi
 ```bash
 python workbook/calc_co2e.py 200
 
+---
+
+## Live Azure endpoint (optional)
+
+This MVP is deployed as an Azure Function (HTTP trigger).  
+**Do not commit function keys**. Store the full URL (including `?code=...`) locally in a `.env` file (gitignored).
+
+**Local / Codespaces test**
+```bash
+set -a; source .env; set +a
+curl -i -X POST "$URL" -H "Content-Type: application/json" \
+  -d '{"query":"what is the heatwave incident checklist","seed":1}'
+
