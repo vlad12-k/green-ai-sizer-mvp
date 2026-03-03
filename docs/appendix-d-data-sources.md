@@ -18,34 +18,56 @@
 
 ---
 
-## SECURITY.md 
+### D1. UK grid carbon intensity (real-world data)
+**Purpose:** Provide a real-world grid intensity value used by the workbook CO₂e calculator and CI gate.
 
-```markdown
-# Security policy
+**Primary source (API):**
+- National Grid ESO Carbon Intensity API (UK)
 
-This repository is a governance-first evidence pack. Security and data discipline are treated as first-class requirements.
+**Evidence stored in this repository:**
+- `data/grid_intensity_uk_snapshot.csv` — raw snapshot exported by the fetch script
+- `data/grid_intensity_uk_summary.json` — derived summary used for traceability (includes the value used in the workbook)
 
-## Secrets and credentials
-Do not commit any of the following:
-- Azure Function keys, access tokens, client secrets, credentials
-- `.env` files containing secrets (this repo ignores `.env` by design)
-- customer / clinical / personal data
+**How the data is collected (reproducible):**
+- Script: `scripts/fetch_uk_grid_intensity.py`
+- Automated refresh: GitHub Actions workflow `refresh-grid-intensity.yml` (scheduled + manual trigger)
 
-Store the deployed Azure Function URL (including `?code=...`) locally in a `.env` file.
+**Value used in the workbook:**
+- The value written into `workbook/appendix-d-baseline-improved.csv` (`grid_intensity_g_per_kwh`) must match the current snapshot/summary evidence.
 
-## Key rotation (Azure Functions)
-If a function key is exposed, rotate it immediately:
-Azure Portal → Function App → Functions → `orchestrator` → Function Keys → regenerate the affected key.
+---
 
-After rotation, update your local `.env`.
+### D2. Routing & cache performance evidence (live endpoint probe)
+**Purpose:** Record observed routing and caching behaviour used to populate the “improved” scenario metrics.
 
-## Dependency and code scanning
-- Keep GitHub Actions workflows enabled.
-- Use Dependabot alerts and CodeQL (if enabled) for continuous scanning.
+**Evidence stored in this repository:**
+- `scripts/probe_endpoint.py` — reproducible probe script (HTTP POST loop)
+- `scripts/probe_run_summary.json` — captured run summary (cache hit rate, small route rate, latency metrics, avg Wh/request)
 
-## Data policy
-This repository may include:
-- public grid carbon intensity snapshots from official/public APIs
-- synthetic prompts for routing tests
+**How to reproduce:**
+- Requires a local `.env` containing the deployed Function URL (including `?code=...`) and must not be committed.
+- Run:
+  - `python scripts/probe_endpoint.py > scripts/probe_run_summary.json`
 
-It must not include sensitive operational or personal data.
+**Mapping to workbook:**
+The following fields in `workbook/appendix-d-baseline-improved.csv` (scenario = `improved`) are updated from `probe_run_summary.json`:
+- `cache_hit_rate`
+- `small_route_rate`
+- `avg_latency_ms`
+- `p95_latency_ms`
+
+---
+
+### D3. Workbook inputs used by the CI Carbon Budget Gate
+**Purpose:** Show exactly which inputs drive the CI “PASS/FAIL” result.
+
+**Evidence stored in this repository:**
+- `workbook/appendix-d-baseline-improved.csv` — baseline vs improved scenario inputs
+- `workbook/calc_co2e.py` — calculator used locally and in CI
+
+**Reproducible check:**
+- `python workbook/calc_co2e.py 200`
+
+Expected outcome:
+- Baseline and improved gCO₂e per 1k requests are printed
+- CI should report **PASS** when improved is within budget
