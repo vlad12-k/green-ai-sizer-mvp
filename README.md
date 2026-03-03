@@ -93,9 +93,9 @@ You can reproduce the baseline vs improved scenario locally, verify evidence fil
 
 ### Run locally
 ```bash
-python workbook/calc_co2e.py 200``` `
+python workbook/calc_co2e.py 200`
 
-What this does
+**What this does**
 	•	Reads scenario inputs from: workbook/appendix-d-baseline-improved.csv
 	•	Uses grid intensity from: data/grid_intensity_uk_summary.json (and data/grid_intensity_uk_snapshot.csv)
 	•	Computes:
@@ -111,7 +111,7 @@ Expected output (shape)
 
 This same logic is enforced in CI by the Carbon Budget Gate workflow.
 
----
+
 
 Reproducibility checklist (what a reviewer can verify)
 
