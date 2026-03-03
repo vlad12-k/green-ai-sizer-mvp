@@ -1,0 +1,48 @@
+name: Refresh UK grid intensity snapshot
+
+on:
+  schedule:
+    # Daily at 06:10 UTC
+    - cron: "10 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-grid-intensity
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (dev)
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run fetch script
+        run: |
+          python scripts/fetch_uk_grid_intensity.py
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "data: refresh UK grid intensity snapshot (auto)"
+          git push origin HEAD:dev

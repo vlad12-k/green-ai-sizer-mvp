@@ -1,0 +1,12 @@
+{
+  "name": "green-ai-sizer-mvp",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "postCreateCommand": "python -V && pip -V",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  }
+}
