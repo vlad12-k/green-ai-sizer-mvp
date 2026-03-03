@@ -1,0 +1,12 @@
+{
+  "n": 200,
+  "ok_responses": 200,
+  "failures": 0,
+  "cache_hit_rate_observed": 0.31,
+  "small_route_rate_observed": 0.6,
+  "avg_latency_ms": 122.22,
+  "p95_latency_ms": 200.0,
+  "avg_wh_request": 0.6122,
+  "timeout_s": 60.0,
+  "retries": 3
+}
