@@ -93,9 +93,9 @@ You can reproduce the baseline vs improved scenario locally, verify evidence fil
 
 ### Run locally
 ```bash
-python workbook/calc_co2e.py 200```
-
- **What this does**
+python workbook/calc_co2e.py 200
+```markdown
+ What this does
 	•	Reads scenario inputs from: workbook/appendix-d-baseline-improved.csv
 	•	Uses grid intensity from: data/grid_intensity_uk_summary.json (and data/grid_intensity_uk_snapshot.csv)
 	•	Computes:
@@ -126,7 +126,7 @@ Evidence artefacts in this repo:
 
 ---
 
- Live Azure endpoint (optional)
+### Live Azure endpoint (optional)
 
 This MVP is deployed as an Azure Function (HTTP trigger) to demonstrate routing output (small vs large) and simulated per-request energy estimate (wh_request) under caching.
 
@@ -153,7 +153,7 @@ curl -i -X POST "$URL" \
 Probe the endpoint (collect stable evidence)
 
 This runs multiple requests and outputs aggregate metrics (cache hit rate, routing rate, latency percentiles, average Wh/request).
-```bash
+
 set -a; source .env; set +a
 python scripts/probe_endpoint.py > scripts/probe_run_summary.json
 cat scripts/probe_run_summary.json
