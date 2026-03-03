@@ -88,21 +88,89 @@ Efficiency improvements alone can trigger **rebound effects** (lower cost → hi
 ---
 
 ## Quickstart
+This repo is a **governance-first evidence pack** for “Green AI sizing”: sustainability is treated as an enforceable constraint.  
+You can reproduce the baseline vs improved scenario locally, verify evidence files, and (optionally) validate the live Azure Function endpoint.
 
 ### Run locally
 ```bash
-python workbook/calc_co2e.py 200
+python workbook/calc_co2e.py 200``` `
+
+What this does
+	•	Reads scenario inputs from: workbook/appendix-d-baseline-improved.csv
+	•	Uses grid intensity from: data/grid_intensity_uk_summary.json (and data/grid_intensity_uk_snapshot.csv)
+	•	Computes:
+	•	baseline gCO₂e per 1k requests
+	•	improved gCO₂e per 1k requests
+	•	total gCO₂e/day for the configured request volume
+	•	Prints a PASS/FAIL decision against the given budget.
+
+Expected output (shape)
+	•	Baseline gCO₂e per 1k requests: …
+	•	Improved gCO₂e per 1k requests: …
+	•	PASS: Within budget. (or FAIL)
+
+This same logic is enforced in CI by the Carbon Budget Gate workflow.
 
 ---
 
-## Live Azure endpoint (optional)
+Reproducibility checklist (what a reviewer can verify)
 
-This MVP is deployed as an Azure Function (HTTP trigger).  
-**Do not commit function keys**. Store the full URL (including `?code=...`) locally in a `.env` file (gitignored).
+Evidence artefacts in this repo:
+	•	Workbook scenario inputs: workbook/appendix-d-baseline-improved.csv
+	•	Calculator logic: workbook/calc_co2e.py
+	•	Probe run evidence (endpoint metrics): scripts/probe_run_summary.json
+	•	Probe script (how evidence was collected): scripts/probe_endpoint.py
+	•	Real-world grid intensity snapshot: data/grid_intensity_uk_snapshot.csv + data/grid_intensity_uk_summary.json
+	•	Data provenance note: docs/appendix-d-data-sources.md
+	•	Security policy: SECURITY.md
 
-**Local / Codespaces test**
+---
+
+ Live Azure endpoint (optional)
+
+This MVP is deployed as an Azure Function (HTTP trigger) to demonstrate routing output (small vs large) and simulated per-request energy estimate (wh_request) under caching.
+
+Security rules
+	•	Never commit the function key (the ?code=... part).
+	•	Store the full URL locally in a .env file (this repo ignores .env by design).
+
+Example .env (local only):
+```bash
+URL='https://<your-function>.azurewebsites.net/api/orchestrator?code=<KEY>'``` `
+
+Minimal endpoint test (Codespaces / local)
 ```bash
 set -a; source .env; set +a
-curl -i -X POST "$URL" -H "Content-Type: application/json" \
-  -d '{"query":"what is the heatwave incident checklist","seed":1}'
+curl -i -X POST "$URL" \
+  -H "Content-Type: application/json" \
+  -d '{"query":"what is the heatwave incident checklist","seed":1}'``` `
 
+  Expected:
+	•	HTTP/1.1 200 OK
+	•	JSON containing: route, cache_hit, latency_ms, wh_request
+
+---
+
+Probe the endpoint (collect stable evidence)
+
+This runs multiple requests and outputs aggregate metrics (cache hit rate, routing rate, latency percentiles, average Wh/request).
+```bash
+set -a; source .env; set +a
+python scripts/probe_endpoint.py > scripts/probe_run_summary.json
+cat scripts/probe_run_summary.json``` `
+
+Notes:
+	•	The probe script reads URL from your environment (loaded from .env).
+	•	The repo keeps the probe output under version control as evidence:
+scripts/probe_run_summary.json
+
+---
+
+Budget-friendly operation (keep LIVE without burning credits)
+
+Recommended practice:
+	•	Do not run the probe repeatedly. Keep it to:
+	•	once to generate evidence (already committed), and
+	•	at most once per week if you intentionally refresh numbers.
+	•	Keep “real data refresh” limited to grid intensity snapshots via GitHub Actions (no Azure runtime cost per request).
+	•	If you want to pause Azure runtime costs, stop the Function App in Azure Portal and start it again when needed.
