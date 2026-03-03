@@ -93,9 +93,9 @@ You can reproduce the baseline vs improved scenario locally, verify evidence fil
 
 ### Run locally
 ```bash
-python workbook/calc_co2e.py 200`
+python workbook/calc_co2e.py 200```
 
-**What this does**
+ **What this does**
 	•	Reads scenario inputs from: workbook/appendix-d-baseline-improved.csv
 	•	Uses grid intensity from: data/grid_intensity_uk_summary.json (and data/grid_intensity_uk_snapshot.csv)
 	•	Computes:
@@ -135,15 +135,14 @@ Security rules
 	•	Store the full URL locally in a .env file (this repo ignores .env by design).
 
 Example .env (local only):
-```bash
-URL='https://<your-function>.azurewebsites.net/api/orchestrator?code=<KEY>'``` `
+URL='https://<your-function>.azurewebsites.net/api/orchestrator?code=<KEY>'
 
 Minimal endpoint test (Codespaces / local)
-```bash
+
 set -a; source .env; set +a
 curl -i -X POST "$URL" \
   -H "Content-Type: application/json" \
-  -d '{"query":"what is the heatwave incident checklist","seed":1}'``` `
+  -d '{"query":"what is the heatwave incident checklist","seed":1}'
 
   Expected:
 	•	HTTP/1.1 200 OK
@@ -157,7 +156,7 @@ This runs multiple requests and outputs aggregate metrics (cache hit rate, routi
 ```bash
 set -a; source .env; set +a
 python scripts/probe_endpoint.py > scripts/probe_run_summary.json
-cat scripts/probe_run_summary.json``` `
+cat scripts/probe_run_summary.json
 
 Notes:
 	•	The probe script reads URL from your environment (loaded from .env).
