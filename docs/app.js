@@ -3,9 +3,9 @@
  * Static GitHub Pages. No external libraries. No external API calls.
  *
  * Evidence sources (all values come from these files only):
- *   - ../workbook/appendix-d-baseline-improved.csv
- *   - ../data/grid_intensity_uk_summary.json
- *   - ../scripts/probe_run_summary.json
+ *   - evidence/appendix-d-baseline-improved.csv
+ *   - evidence/grid_intensity_uk_summary.json
+ *   - evidence/probe_run_summary.json
  */
 
 'use strict';
@@ -203,9 +203,9 @@ const BUDGET = 200.0;
 
 /* Relative paths from docs/ to data files */
 const PATHS = {
-  gridSummary:  '../data/grid_intensity_uk_summary.json',
-  probeSummary: '../scripts/probe_run_summary.json',
-  workbookCSV:  '../workbook/appendix-d-baseline-improved.csv'
+  gridSummary:  'evidence/grid_intensity_uk_summary.json',
+  probeSummary: 'evidence/probe_run_summary.json',
+  workbookCSV:  'evidence/appendix-d-baseline-improved.csv'
 };
 
 async function loadAndRender() {
@@ -224,14 +224,14 @@ async function loadAndRender() {
     gridData   = r.data;
     gridLastMod = r.lastMod;
     provenance.push({
-      file: 'data/grid_intensity_uk_summary.json',
+      file: 'evidence/grid_intensity_uk_summary.json',
       desc: 'UK grid carbon intensity — min/avg/max (last 24 h, half-hourly)',
       lastMod: gridLastMod || (gridData.generated_utc ? gridData.generated_utc : null),
       status: 'ok',
       statusLabel: 'Loaded'
     });
   } catch (e) {
-    provenance.push({ file: 'data/grid_intensity_uk_summary.json', desc: 'Grid intensity summary', lastMod: null, status: 'err', statusLabel: 'Failed to load: ' + e.message });
+    provenance.push({ file: 'evidence/grid_intensity_uk_summary.json', desc: 'Grid intensity summary', lastMod: null, status: 'err', statusLabel: 'Failed to load: ' + e.message });
   }
 
   /* --- Load probe summary ---------------------------------- */
@@ -240,14 +240,14 @@ async function loadAndRender() {
     probeData   = r.data;
     probeLastMod = r.lastMod;
     provenance.push({
-      file: 'scripts/probe_run_summary.json',
+      file: 'evidence/probe_run_summary.json',
       desc: 'Endpoint probe run — cache hit rate, routing, latency, Wh/request',
       lastMod: probeLastMod,
       status: 'ok',
       statusLabel: 'Loaded'
     });
   } catch (e) {
-    provenance.push({ file: 'scripts/probe_run_summary.json', desc: 'Probe run summary', lastMod: null, status: 'err', statusLabel: 'Failed to load: ' + e.message });
+    provenance.push({ file: 'evidence/probe_run_summary.json', desc: 'Probe run summary', lastMod: null, status: 'err', statusLabel: 'Failed to load: ' + e.message });
   }
 
   /* --- Load workbook CSV ----------------------------------- */
@@ -256,14 +256,14 @@ async function loadAndRender() {
     csvRows   = parseCSV(r.text);
     csvLastMod = r.lastMod;
     provenance.push({
-      file: 'workbook/appendix-d-baseline-improved.csv',
+      file: 'evidence/appendix-d-baseline-improved.csv',
       desc: 'Workbook scenario inputs — baseline vs improved',
       lastMod: csvLastMod,
       status: 'ok',
       statusLabel: 'Loaded'
     });
   } catch (e) {
-    provenance.push({ file: 'workbook/appendix-d-baseline-improved.csv', desc: 'Workbook CSV', lastMod: null, status: 'err', statusLabel: 'Failed to load: ' + e.message });
+    provenance.push({ file: 'evidence/appendix-d-baseline-improved.csv', desc: 'Workbook CSV', lastMod: null, status: 'err', statusLabel: 'Failed to load: ' + e.message });
   }
 
   /* ========================================================
@@ -324,7 +324,7 @@ async function loadAndRender() {
   if (gridTs) {
     lastUpdatedEl.textContent =
       'Grid intensity last refreshed: ' + new Date(gridTs).toUTCString() +
-      ' · Data sourced from data/grid_intensity_uk_summary.json (NESO UK Carbon Intensity API)';
+      ' · Data sourced from evidence/grid_intensity_uk_summary.json (NESO UK Carbon Intensity API)';
   } else {
     lastUpdatedEl.textContent = 'Last updated: page loaded at ' + new Date().toUTCString();
   }
