@@ -1,5 +1,5 @@
 ## Release scope
-This is the first tagged portfolio release focused on **governance and evidence artefacts** for the Topic 5 “Responsible AI Sizing” case study. It packages the minimum reproducible layer needed to support carbon-aware decision-making (routing/caching/inference control) and to demonstrate auditability of assumptions and KPIs.
+This is the first tagged portfolio release focused on **governance and evidence artefacts** for the “Responsible AI Sizing” case study. It packages the minimum reproducible layer needed to support carbon-aware decision-making (routing/caching/inference control) and to demonstrate auditability of assumptions and KPIs.
 
 ## What’s included
 ### Governance automation (CI)
