@@ -65,7 +65,13 @@ jobs:
           PR_BODY="$(python - <<'PY'
 import json
 from pathlib import Path
-summary = json.loads(Path("data/grid_intensity_uk_summary.json").read_text())
+summary_path = Path("data/grid_intensity_uk_summary.json")
+try:
+    summary = json.loads(summary_path.read_text())
+except FileNotFoundError:
+    raise SystemExit(f"Missing required summary file: {summary_path}")
+except json.JSONDecodeError as exc:
+    raise SystemExit(f"Invalid JSON in {summary_path}: {exc}")
 print(
     "Automated UK grid-intensity refresh.\n\n"
     f"- generated_utc: {summary['generated_utc']}\n"
@@ -76,7 +82,7 @@ print(
 PY
           )"
 
-          PR_NUMBER="$(gh pr list --base main --head "${BRANCH}" --state open --json number --jq '.[0].number')"
+          PR_NUMBER="$(gh pr list --base main --head "${BRANCH}" --state open --json number --jq '.[0].number // empty')"
           if [ -z "${PR_NUMBER}" ]; then
             PR_URL="$(gh pr create \
               --base main \
