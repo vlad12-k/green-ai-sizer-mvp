@@ -1,4 +1,4 @@
-# KPIs — KPI Set (Definitions)
+# KPI Definitions
 
 ## Core KPIs
 - **gCO₂e / 1,000 requests**

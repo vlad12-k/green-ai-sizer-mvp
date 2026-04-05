@@ -1,4 +1,4 @@
-# System Boundary — Assumptions and system boundary
+# System Boundary
 
 ## System boundary (what is included)
 

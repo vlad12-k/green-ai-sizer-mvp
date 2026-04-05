@@ -1,4 +1,4 @@
-# RACI — Stakeholders + RACI (Governance)
+# Stakeholders and RACI
 
 ## Stakeholders (minimum 6)
 - Executive leadership
