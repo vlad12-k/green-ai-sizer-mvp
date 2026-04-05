@@ -75,7 +75,7 @@ def write_step_summary(lines: str) -> None:
 
 
 def main() -> None:
-    path = "workbook/appendix-d-baseline-improved.csv"
+    path = "data/scenario-baseline-improved.csv"
 
     # Read CSV
     try:

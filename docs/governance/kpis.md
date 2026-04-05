@@ -1,4 +1,6 @@
-# Appendix F — KPI Set (Definitions)
+# KPI Definitions
+
+These KPIs define how the product monitors carbon performance, routing efficiency, and service responsiveness across governance reviews.
 
 ## Core KPIs
 - **gCO₂e / 1,000 requests**

@@ -2,15 +2,15 @@
 What does this PR change and why?
 
 ## Type of change
-- [ ] docs (README / appendices)
+- [ ] docs (README / governance/evidence docs)
 - [ ] ci (GitHub Actions / workflows)
 - [ ] workbook (CSV scenarios / calculator)
 - [ ] repo hygiene (templates / changelog / configs)
 
 ## Evidence impact (required if workbook/calculator changed)
-- [ ] Appendix D updated (`workbook/appendix-d-baseline-improved.csv`)
+- [ ] Scenario and Data Evidence updated (`data/scenario-baseline-improved.csv`)
 - [ ] CI run summary reflects updated CO₂e values
-- [ ] Appendix C/F/G updated if boundary/KPIs/risks changed
+- [ ] System Boundary/F/G updated if boundary/KPIs/risks changed
 
 ## Verification
 - [ ] Carbon Budget Gate passes

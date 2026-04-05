@@ -1,4 +1,6 @@
-# Appendix G — Risk Register
+# Risk Register
+
+This register tracks key sustainability, reliability, and governance risks, their likely impact, and active mitigations.
 
 | Risk | Cause | Impact | Likelihood | Mitigation | Burden shifting (where impact moves) |
 |---|---|---|---|---|---|

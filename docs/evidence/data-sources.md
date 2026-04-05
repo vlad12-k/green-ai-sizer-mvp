@@ -1,4 +1,4 @@
-# Appendix D — Data Sources (Grid Carbon Intensity)
+# Scenario and Data Evidence — Data Sources (Grid Carbon Intensity)
 
 ## UK Grid Carbon Intensity (real-world data)
 **Source:** NESO / UK Carbon Intensity API (public endpoint, no API key required).  
@@ -30,10 +30,10 @@
 
 **How the data is collected (reproducible):**
 - Script: `scripts/fetch_uk_grid_intensity.py`
-- Automated refresh: GitHub Actions workflow `refresh-grid-intensity.yml` (scheduled + manual trigger)
+- Automated refresh: GitHub Actions workflow `refresh-grid-intensity.yml` (scheduled + manual trigger), with PR status comment and auto-merge attempt when checks pass
 
 **Value used in the workbook:**
-- The value written into `workbook/appendix-d-baseline-improved.csv` (`grid_intensity_g_per_kwh`) must match the current snapshot/summary evidence.
+- The value written into `data/scenario-baseline-improved.csv` (`grid_intensity_g_per_kwh`) must match the current snapshot/summary evidence.
 
 ---
 
@@ -50,7 +50,7 @@
   - `python scripts/probe_endpoint.py > scripts/probe_run_summary.json`
 
 **Mapping to workbook:**
-The following fields in `workbook/appendix-d-baseline-improved.csv` (scenario = `improved`) are updated from `probe_run_summary.json`:
+The following fields in `data/scenario-baseline-improved.csv` (scenario = `improved`) are updated from `probe_run_summary.json`:
 - `cache_hit_rate`
 - `small_route_rate`
 - `avg_latency_ms`
@@ -62,7 +62,7 @@ The following fields in `workbook/appendix-d-baseline-improved.csv` (scenario = 
 **Purpose:** Show exactly which inputs drive the CI “PASS/FAIL” result.
 
 **Evidence stored in this repository:**
-- `workbook/appendix-d-baseline-improved.csv` — baseline vs improved scenario inputs
+- `data/scenario-baseline-improved.csv` — baseline vs improved scenario inputs
 - `workbook/calc_co2e.py` — calculator used locally and in CI
 
 **Reproducible check:**

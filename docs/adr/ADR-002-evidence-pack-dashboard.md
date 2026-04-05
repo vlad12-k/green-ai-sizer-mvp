@@ -12,11 +12,11 @@ Stakeholders and auditors need to verify that reported emissions figures are tra
 
 ## Decision
 
-Maintain an **evidence pack** of appendix-style Markdown documents under `docs/`, and publish a **static GitHub Pages dashboard** (`docs/index.html`, `docs/styles.css`, `docs/app.js`) that reads committed JSON evidence files at page load.
+Maintain an **evidence pack** of product governance and evidence Markdown documents under `docs/`, and publish a **static GitHub Pages dashboard** (`docs/index.html`, `docs/styles.css`, `docs/app.js`) that reads committed JSON evidence files at page load.
 
 Evidence sources used by the dashboard:
 
-- `workbook/appendix-d-baseline-improved.csv`
+- `data/scenario-baseline-improved.csv`
 - `data/grid_intensity_uk_summary.json`
 - `scripts/probe_run_summary.json`
 

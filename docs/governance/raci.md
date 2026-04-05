@@ -1,4 +1,4 @@
-# Appendix E — Stakeholders + RACI (Governance)
+# Stakeholders
 
 ## Stakeholders (minimum 6)
 - Executive leadership
@@ -10,7 +10,10 @@
 - Grid / energy ecosystem actors
 - Communities & partner agencies
 
-## RACI (example)
+
+# RACI
+
+## RACI matrix (example)
 | Activity | Responsible | Accountable | Consulted | Informed |
 |---|---|---|---|---|
 | Define carbon budget (gCO₂e/1k req) | Sustainability/FinOps | Exec sponsor | AI team, Ops | All teams |

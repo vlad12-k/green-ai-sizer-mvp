@@ -28,7 +28,7 @@ If a function key is accidentally exposed (committed to a repository, posted in 
 5. If the key is stored in a GitHub Secret, update it under **Repository Settings** → **Secrets and variables** → **Actions**.
 6. Confirm the old key is invalidated by testing with the old URL (expect HTTP 401).
 
-Detailed steps are also in `docs/runbook.md` (section 2).
+Detailed steps are also in `docs/governance/runbook.md` (section 2).
 
 ---
 
