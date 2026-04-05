@@ -38,9 +38,12 @@ jobs:
           test -f data/grid_intensity_uk_snapshot.csv
           test -f data/grid_intensity_uk_summary.json
 
-      - name: Sync dashboard evidence summary
+      - name: Sync dashboard evidence mirror
         run: |
           cp data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
+          if [ -f data/grid_intensity_uk_snapshot.csv ]; then
+            cp data/grid_intensity_uk_snapshot.csv docs/evidence/grid_intensity_uk_snapshot.csv
+          fi
 
       - name: Commit changes and open/update PR
         env:
@@ -57,10 +60,12 @@ jobs:
           fi
 
           BRANCH="automation/refresh-grid-intensity"
-          git checkout -B "${BRANCH}" main
+          git checkout -B "${BRANCH}" origin/main
           git add data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
           git commit -m "data: refresh UK grid intensity snapshot (auto)"
-          git push --force-with-lease origin "${BRANCH}"
+          if ! git push origin "${BRANCH}"; then
+            git push --force-with-lease origin "${BRANCH}"
+          fi
 
           PR_BODY="$(python - <<'PY'
 import json
@@ -101,6 +106,5 @@ PY
           fi
 
           if ! gh pr merge "${PR_NUMBER}" --auto --squash; then
-            echo "Failed to enable auto-merge for PR #${PR_NUMBER} (could be repo settings, permissions, checks, or conflicts)."
             echo "Auto-merge is disabled in repo settings. Enable Settings → General → Pull Requests → Allow auto-merge."
           fi
