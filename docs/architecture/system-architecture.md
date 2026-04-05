@@ -71,7 +71,7 @@ flowchart TD
 ### Grid intensity data
 
 - **Source:** NESO / UK Carbon Intensity API (`GET https://api.carbonintensity.org.uk/intensity/date`), public endpoint
-- **Refresh:** `.github/workflows/refresh-grid-intensity.yml` — scheduled daily at 06:10 UTC, commits to `dev`
+- **Refresh:** `.github/workflows/refresh-grid-intensity.yml` — scheduled daily at 06:10 UTC; updates data and dashboard evidence files, opens automation PR, and enables auto-merge when allowed
 - **Evidence files:** `data/grid_intensity_uk_snapshot.csv` (raw), `data/grid_intensity_uk_summary.json` (min/avg/max summary)
 
 ### Optional Azure Function endpoint

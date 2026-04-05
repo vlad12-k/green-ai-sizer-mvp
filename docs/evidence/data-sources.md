@@ -30,7 +30,7 @@
 
 **How the data is collected (reproducible):**
 - Script: `scripts/fetch_uk_grid_intensity.py`
-- Automated refresh: GitHub Actions workflow `refresh-grid-intensity.yml` (scheduled + manual trigger)
+- Automated refresh: GitHub Actions workflow `refresh-grid-intensity.yml` (scheduled + manual trigger), with PR status comment and auto-merge attempt when checks pass
 
 **Value used in the workbook:**
 - The value written into `data/scenario-baseline-improved.csv` (`grid_intensity_g_per_kwh`) must match the current snapshot/summary evidence.

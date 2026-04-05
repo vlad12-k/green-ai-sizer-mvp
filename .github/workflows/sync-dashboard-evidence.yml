@@ -1,0 +1,55 @@
+name: Sync dashboard evidence copies
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "data/grid_intensity_uk_summary.json"
+      - "scripts/probe_run_summary.json"
+      - "data/scenario-baseline-improved.csv"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-dashboard-evidence
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (main)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Sync dashboard evidence files
+        run: |
+          cp data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
+          cp scripts/probe_run_summary.json docs/evidence/probe_run_summary.json
+          cp data/scenario-baseline-improved.csv docs/evidence/scenario-baseline-improved.csv
+
+      - name: Create PR if changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: sync dashboard evidence copies (auto)"
+          title: "docs: sync dashboard evidence copies (auto)"
+          body: |
+            Automated synchronization of dashboard evidence mirror files under `docs/evidence/`.
+
+            Updated files:
+            - docs/evidence/grid_intensity_uk_summary.json
+            - docs/evidence/probe_run_summary.json
+            - docs/evidence/scenario-baseline-improved.csv
+          branch: "automation/sync-dashboard-evidence"
+          base: "main"
+          add-paths: |
+            docs/evidence/grid_intensity_uk_summary.json
+            docs/evidence/probe_run_summary.json
+            docs/evidence/scenario-baseline-improved.csv
+          delete-branch: true

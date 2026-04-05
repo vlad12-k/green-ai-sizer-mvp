@@ -11,7 +11,7 @@ This index explains what each evidence file proves.
 | `scripts/probe_run_summary.json` | Observed endpoint behavior metrics (cache, routing, latency, Wh/request) |
 | `scripts/probe_endpoint.py` | Reproducible method used to collect probe evidence |
 | `.github/workflows/carbon-budget.yml` | Carbon budget enforcement gate in CI |
-| `.github/workflows/refresh-grid-intensity.yml` | Scheduled and manual refresh workflow for grid evidence |
+| `.github/workflows/refresh-grid-intensity.yml` | Scheduled/manual refresh, dashboard evidence sync, PR status comment, and auto-merge attempt |
 | `docs/governance/controls.md` | Control objectives mapped to evidence and review cadence |
 | `docs/governance/runbook.md` | Repeatable operational procedures for validation, refresh, and response |
 | `docs/governance/risk-register.md` | Tracked risks, impacts, and mitigations |
