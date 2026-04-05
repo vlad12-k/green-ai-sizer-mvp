@@ -1,4 +1,4 @@
-# Appendix E — Stakeholders + RACI (Governance)
+# RACI — Stakeholders + RACI (Governance)
 
 ## Stakeholders (minimum 6)
 - Executive leadership

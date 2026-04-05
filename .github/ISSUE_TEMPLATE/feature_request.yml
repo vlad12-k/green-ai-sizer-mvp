@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this form to propose improvements. Keep it measurable: tie changes to KPIs (Appendix F).
+        Use this form to propose improvements. Keep it measurable: tie changes to KPIs (KPIs).
 
   - type: dropdown
     id: category
@@ -21,7 +21,7 @@ body:
         - Governance (budgets / quotas / policy)
         - Metrics / Observability
         - UI / Visualisation (GitHub Pages)
-        - Documentation / Appendices
+        - Documentation / Product docs
         - Other
     validations:
       required: true
@@ -48,7 +48,7 @@ body:
     id: impact
     attributes:
       label: Expected impact (KPIs)
-      description: Specify which KPIs will change and how (Appendix F).
+      description: Specify which KPIs will change and how (KPIs).
       value: |
         - gCO₂e/1k requests:
         - Cache hit rate:
@@ -71,9 +71,9 @@ body:
     attributes:
       label: Acceptance criteria
       options:
-        - label: KPI measurement updated (Appendix F or workflow summary)
+        - label: KPI measurement updated (KPIs or workflow summary)
           required: true
-        - label: Workbook updated (Appendix D baseline vs improved / sensitivity)
+        - label: Workbook updated (Scenario and Data Evidence baseline vs improved / sensitivity)
           required: false
-        - label: Documentation updated (appendices or README)
+        - label: Documentation updated (governance/evidence docs or README)
           required: false

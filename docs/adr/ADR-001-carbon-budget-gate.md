@@ -14,7 +14,7 @@ AI inference creates operational emissions that are invisible unless explicitly 
 
 Implement a **Carbon Budget Gate** as a required GitHub Actions check on every pull request and push to `main`. The check runs `workbook/calc_co2e.py` against a configurable budget (default 200 gCO₂e / 1k requests) and exits non-zero on budget breach.
 
-Evidence source: `workbook/appendix-d-baseline-improved.csv`  
+Evidence source: `data/scenario-baseline-improved.csv`  
 Calculator: `workbook/calc_co2e.py`  
 Workflow: `.github/workflows/carbon-budget.yml`
 

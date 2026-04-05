@@ -38,4 +38,4 @@ This statement should be reviewed if:
 - The probe script is modified to log prompt content.
 - The system is extended to handle real user queries.
 
-Owner: AI team / Compliance lead. Evidence: `docs/controls.md` (C-05).
+Owner: AI team / Compliance lead. Evidence: `docs/governance/controls.md` (C-05).

@@ -27,7 +27,7 @@ jobs:
           for f in \
             "data/grid_intensity_uk_summary.json" \
             "scripts/probe_run_summary.json" \
-            "workbook/appendix-d-baseline-improved.csv" \
+            "data/scenario-baseline-improved.csv" \
             "workbook/calc_co2e.py" \
             "docs/styles.css" \
             "docs/app.js"; do
@@ -66,7 +66,7 @@ jobs:
               "scenario", "requests_per_day", "cache_hit_rate", "small_route_rate",
               "wh_small", "wh_large", "grid_intensity_g_per_kwh"
           ]
-          path = "workbook/appendix-d-baseline-improved.csv"
+          path = "data/scenario-baseline-improved.csv"
 
           with open(path, newline="", encoding="utf-8") as f:
               rows = list(csv.DictReader(f))

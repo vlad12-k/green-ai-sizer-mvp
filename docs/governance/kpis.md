@@ -1,4 +1,4 @@
-# Appendix F — KPI Set (Definitions)
+# KPIs — KPI Set (Definitions)
 
 ## Core KPIs
 - **gCO₂e / 1,000 requests**

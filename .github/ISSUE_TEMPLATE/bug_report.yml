@@ -17,7 +17,7 @@ body:
       description: Which part is broken?
       options:
         - GitHub Actions (Carbon Budget Gate)
-        - Workbook CSV (Appendix D)
+        - Workbook CSV (Scenario and Data Evidence)
         - CO2e calculator script (calc_co2e.py)
         - Documentation / Appendices
         - Other
@@ -67,7 +67,7 @@ body:
     id: csv_rows
     attributes:
       label: Workbook rows used
-      description: Paste the baseline/improved rows from Appendix D CSV.
+      description: Paste the baseline/improved rows from Scenario and Data Evidence CSV.
       render: text
     validations:
       required: false
@@ -92,5 +92,5 @@ body:
       options:
         - label: I verified the latest workflow run (not an old run) and checked the logs.
           required: true
-        - label: I confirmed the CSV path is `workbook/appendix-d-baseline-improved.csv`.
+        - label: I confirmed the CSV path is `data/scenario-baseline-improved.csv`.
           required: true

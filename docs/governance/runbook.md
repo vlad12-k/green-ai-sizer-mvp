@@ -25,7 +25,7 @@ Improved total gCO2e/day: 50.69 gCO2e
 PASS: Within budget.
 ```
 
-If you see `FAIL: Budget exceeded`, the improved scenario in `workbook/appendix-d-baseline-improved.csv` exceeds the budget. Either reduce the improved scenario metrics or raise the budget by updating the workflow call in `.github/workflows/carbon-budget.yml`.
+If you see `FAIL: Budget exceeded`, the improved scenario in `data/scenario-baseline-improved.csv` exceeds the budget. Either reduce the improved scenario metrics or raise the budget by updating the workflow call in `.github/workflows/carbon-budget.yml`.
 
 **In CI (GitHub Actions):**
 
@@ -34,7 +34,7 @@ If you see `FAIL: Budget exceeded`, the improved scenario in `workbook/appendix-
 3. Check the **Run CO2e budget check** step log and the **Step Summary** panel.
 4. A green tick indicates PASS; a red cross indicates FAIL with the breach details.
 
-**Evidence artefacts:** `workbook/appendix-d-baseline-improved.csv`, `workbook/calc_co2e.py`, `.github/workflows/carbon-budget.yml`
+**Evidence artefacts:** `data/scenario-baseline-improved.csv`, `workbook/calc_co2e.py`, `.github/workflows/carbon-budget.yml`
 
 ---
 
@@ -98,11 +98,11 @@ python scripts/probe_endpoint.py > scripts/probe_run_summary.json
 cat scripts/probe_run_summary.json
 ```
 
-If the new values are materially different, update `workbook/appendix-d-baseline-improved.csv` (improved scenario fields: `cache_hit_rate`, `small_route_rate`, `avg_latency_ms`, `p95_latency_ms`) and re-run the budget check.
+If the new values are materially different, update `data/scenario-baseline-improved.csv` (improved scenario fields: `cache_hit_rate`, `small_route_rate`, `avg_latency_ms`, `p95_latency_ms`) and re-run the budget check.
 
 **Frequency:** at most once per week; only when endpoint configuration has changed.
 
-**Evidence artefact:** `scripts/probe_run_summary.json`, `docs/appendix-d-data-sources.md`
+**Evidence artefact:** `scripts/probe_run_summary.json`, `docs/evidence/data-sources.md`
 
 ---
 
@@ -138,8 +138,8 @@ Use this checklist during quarterly governance reviews:
 - [ ] Run `python workbook/calc_co2e.py 200` locally — confirm PASS and current values.
 - [ ] Verify `data/grid_intensity_uk_summary.json` has a `generated_utc` within the last 7 days (or trigger manual refresh).
 - [ ] Confirm `scripts/probe_run_summary.json` reflects current endpoint configuration.
-- [ ] Review `workbook/appendix-d-baseline-improved.csv` — confirm improved scenario fields match probe summary.
+- [ ] Review `data/scenario-baseline-improved.csv` — confirm improved scenario fields match probe summary.
 - [ ] Check `.gitignore` still excludes `.env` and `.env.*`.
-- [ ] Review `docs/appendix-g-risk-register.md` for any new or changed risks.
-- [ ] Check `docs/controls.md` review cadence dates are current.
+- [ ] Review `docs/governance/risk-register.md` for any new or changed risks.
+- [ ] Check `docs/governance/controls.md` review cadence dates are current.
 - [ ] Confirm no secrets appear in recent commits: `git log --all --oneline | head -20` and review diffs for `?code=` patterns.

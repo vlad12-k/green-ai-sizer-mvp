@@ -1,4 +1,4 @@
-# Appendix C — Assumptions and system boundary
+# System Boundary — Assumptions and system boundary
 
 ## System boundary (what is included)
 
@@ -20,13 +20,13 @@ This emissions method covers operational emissions for:
 
 | Parameter | Value | Source |
 |---|---|---|
-| Requests per day (baseline + improved) | 1,000 | `workbook/appendix-d-baseline-improved.csv` |
-| Cache hit rate (baseline) | 0 % | `workbook/appendix-d-baseline-improved.csv` |
+| Requests per day (baseline + improved) | 1,000 | `data/scenario-baseline-improved.csv` |
+| Cache hit rate (baseline) | 0 % | `data/scenario-baseline-improved.csv` |
 | Cache hit rate (improved) | 31 % | `scripts/probe_run_summary.json` → CSV |
-| Small route rate (baseline) | 0 % | `workbook/appendix-d-baseline-improved.csv` |
+| Small route rate (baseline) | 0 % | `data/scenario-baseline-improved.csv` |
 | Small route rate (improved) | 60 % | `scripts/probe_run_summary.json` → CSV |
-| Energy per small request (Wh) | 0.2 | `workbook/appendix-d-baseline-improved.csv` |
-| Energy per large request (Wh) | 2.0 | `workbook/appendix-d-baseline-improved.csv` |
+| Energy per small request (Wh) | 0.2 | `data/scenario-baseline-improved.csv` |
+| Energy per large request (Wh) | 2.0 | `data/scenario-baseline-improved.csv` |
 | Grid carbon intensity (gCO₂/kWh) | 79.85 (avg, UK national grid) | `data/grid_intensity_uk_summary.json` |
 
 ## Sensitivity

@@ -37,7 +37,7 @@
         <div class="kpi-card" id="kpi-budget-status">
           <div class="kpi-label">CI Budget Status</div>
           <div class="kpi-value" id="val-budget-status">—</div>
-          <div class="kpi-source">Source: <code>workbook/appendix-d-baseline-improved.csv</code></div>
+          <div class="kpi-source">Source: <code>data/scenario-baseline-improved.csv</code></div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Budget threshold</div>
@@ -47,12 +47,12 @@
         <div class="kpi-card">
           <div class="kpi-label">Baseline gCO₂e / 1k req</div>
           <div class="kpi-value" id="val-baseline">—</div>
-          <div class="kpi-source">Source: <code>workbook/appendix-d-baseline-improved.csv</code></div>
+          <div class="kpi-source">Source: <code>data/scenario-baseline-improved.csv</code></div>
         </div>
         <div class="kpi-card kpi-highlight">
           <div class="kpi-label">Improved gCO₂e / 1k req</div>
           <div class="kpi-value" id="val-improved">—</div>
-          <div class="kpi-source">Source: <code>workbook/appendix-d-baseline-improved.csv</code></div>
+          <div class="kpi-source">Source: <code>data/scenario-baseline-improved.csv</code></div>
         </div>
         <div class="kpi-card kpi-highlight">
           <div class="kpi-label">Reduction vs baseline</div>
@@ -109,7 +109,7 @@
       <div class="charts-grid">
         <div class="chart-card">
           <h3>CO₂e intensity: Baseline vs Improved (gCO₂e / 1k requests)</h3>
-          <p class="chart-source">Source: <code>workbook/appendix-d-baseline-improved.csv</code></p>
+          <p class="chart-source">Source: <code>data/scenario-baseline-improved.csv</code></p>
           <div class="chart-container" id="chart-co2e" aria-label="Bar chart: baseline vs improved CO2e per 1k requests">
             <svg id="svg-co2e" width="100%" height="240" role="img" aria-label="Baseline vs improved CO2e bar chart"></svg>
           </div>
@@ -137,9 +137,9 @@
     <section id="panel-governance" class="tab-panel" role="tabpanel" aria-labelledby="tab-governance" hidden>
       <h2 class="section-title">Governance view</h2>
       <p class="section-note">
-        Controls are defined in <a href="controls.md"><code>docs/controls.md</code></a>.
+        Controls are defined in <a href="governance/controls.md"><code>docs/governance/controls.md</code></a>.
         Architecture decision records are in <a href="adr/ADR-001-carbon-budget-gate.md"><code>docs/adr/</code></a>.
-        Operator runbook: <a href="runbook.md"><code>docs/runbook.md</code></a>.
+        Operator runbook: <a href="governance/runbook.md"><code>docs/governance/runbook.md</code></a>.
       </p>
 
       <h3>Controls register (summary)</h3>
@@ -166,7 +166,7 @@
               <td>C-02</td>
               <td>Budget inputs traceable and versioned</td>
               <td>Workbook CSV in version control; PR review required</td>
-              <td><a href="https://github.com/vlad12-k/green-ai-sizer-mvp/blob/main/workbook/appendix-d-baseline-improved.csv" target="_blank" rel="noopener"><code>appendix-d-baseline-improved.csv</code></a></td>
+              <td><a href="https://github.com/vlad12-k/green-ai-sizer-mvp/blob/main/data/scenario-baseline-improved.csv" target="_blank" rel="noopener"><code>scenario-baseline-improved.csv</code></a></td>
               <td>On change; quarterly audit</td>
             </tr>
             <tr>
@@ -193,36 +193,36 @@
             <tr>
               <td>C-06</td>
               <td>Boundary and assumptions documented</td>
-              <td>Appendix C under version control</td>
-              <td><a href="appendix-c-boundary.md"><code>appendix-c-boundary.md</code></a></td>
+              <td>System Boundary under version control</td>
+              <td><a href="governance/system-boundary.md"><code>governance/system-boundary.md</code></a></td>
               <td>On assumption change; quarterly</td>
             </tr>
             <tr>
               <td>C-07</td>
               <td>Data sources documented and reproducible</td>
-              <td>Appendix D with fetch script committed</td>
-              <td><a href="appendix-d-data-sources.md"><code>appendix-d-data-sources.md</code></a></td>
+              <td>Scenario and Data Evidence with fetch script committed</td>
+              <td><a href="evidence/data-sources.md"><code>evidence/data-sources.md</code></a></td>
               <td>On source change; quarterly</td>
             </tr>
             <tr>
               <td>C-08</td>
               <td>Risks identified and mitigated</td>
               <td>Risk register maintained</td>
-              <td><a href="appendix-g-risk-register.md"><code>appendix-g-risk-register.md</code></a></td>
+              <td><a href="governance/risk-register.md"><code>governance/risk-register.md</code></a></td>
               <td>Quarterly risk review</td>
             </tr>
             <tr>
               <td>C-09</td>
               <td>KPIs defined and reportable</td>
               <td>KPI definitions and cadence documented</td>
-              <td><a href="appendix-f-kpis.md"><code>appendix-f-kpis.md</code></a></td>
+              <td><a href="governance/kpis.md"><code>governance/kpis.md</code></a></td>
               <td>Quarterly or on KPI change</td>
             </tr>
             <tr>
               <td>C-10</td>
               <td>Stakeholder accountability defined</td>
               <td>RACI table maintained</td>
-              <td><a href="appendix-e-raci.md"><code>appendix-e-raci.md</code></a></td>
+              <td><a href="governance/raci.md"><code>governance/raci.md</code></a></td>
               <td>Annually or on team change</td>
             </tr>
             <tr>
@@ -240,7 +240,7 @@
               <td>C-12</td>
               <td>Operator procedures documented</td>
               <td>Runbook: validate gate, rotate keys, refresh evidence, pause spend</td>
-              <td><a href="runbook.md"><code>runbook.md</code></a></td>
+              <td><a href="governance/runbook.md"><code>runbook.md</code></a></td>
               <td>Quarterly; on procedure change</td>
             </tr>
           </tbody>

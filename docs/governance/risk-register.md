@@ -1,4 +1,4 @@
-# Appendix G — Risk Register
+# Risk Register — Risk Register
 
 | Risk | Cause | Impact | Likelihood | Mitigation | Burden shifting (where impact moves) |
 |---|---|---|---|---|---|

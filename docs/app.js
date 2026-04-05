@@ -3,7 +3,7 @@
  * Static GitHub Pages. No external libraries. No external API calls.
  *
  * Evidence sources (all values come from these files only):
- *   - evidence/appendix-d-baseline-improved.csv
+ *   - evidence/scenario-baseline-improved.csv
  *   - evidence/grid_intensity_uk_summary.json
  *   - evidence/probe_run_summary.json
  */
@@ -205,7 +205,7 @@ const BUDGET = 200.0;
 const PATHS = {
   gridSummary:  'evidence/grid_intensity_uk_summary.json',
   probeSummary: 'evidence/probe_run_summary.json',
-  workbookCSV:  'evidence/appendix-d-baseline-improved.csv'
+  workbookCSV:  'evidence/scenario-baseline-improved.csv'
 };
 
 async function loadAndRender() {
@@ -256,14 +256,14 @@ async function loadAndRender() {
     csvRows   = parseCSV(r.text);
     csvLastMod = r.lastMod;
     provenance.push({
-      file: 'evidence/appendix-d-baseline-improved.csv',
+      file: 'evidence/scenario-baseline-improved.csv',
       desc: 'Workbook scenario inputs — baseline vs improved',
       lastMod: csvLastMod,
       status: 'ok',
       statusLabel: 'Loaded'
     });
   } catch (e) {
-    provenance.push({ file: 'evidence/appendix-d-baseline-improved.csv', desc: 'Workbook CSV', lastMod: null, status: 'err', statusLabel: 'Failed to load: ' + e.message });
+    provenance.push({ file: 'evidence/scenario-baseline-improved.csv', desc: 'Workbook CSV', lastMod: null, status: 'err', statusLabel: 'Failed to load: ' + e.message });
   }
 
   /* ========================================================

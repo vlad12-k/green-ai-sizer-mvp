@@ -33,22 +33,22 @@ If a PR changes workbook inputs or calculator logic, reviewers should verify the
 
 ---
 
-## 3) Evidence discipline (workbook + appendices)
+## 3) Evidence discipline (scenario + evidence docs)
 
 This project treats evidence as a first-class artefact.
 
 ### When you change workbook inputs
 If you edit:
-- `workbook/appendix-d-baseline-improved.csv`
+- `data/scenario-baseline-improved.csv`
 
 You must:
 1. Ensure the calculator still runs:
    - `python workbook/calc_co2e.py 200`
 2. Confirm CI summary shows updated values (baseline, improved, reduction).
-3. Update related appendix documentation in `/docs` where needed:
-   - boundary/assumptions (Appendix C)
-   - KPI definitions (Appendix F)
-   - risks and mitigations (Appendix G)
+3. Update related product documentation in `/docs` where needed:
+   - boundary/assumptions (System Boundary)
+   - KPI definitions (KPIs)
+   - risks and mitigations (Risk Register)
 
 ### When you change calculator logic
 If you edit:
@@ -74,14 +74,14 @@ Use GitHub repository secrets if integrations are added later (Azure stage).
 ## 5) Commit message conventions
 
 Use short, action-oriented messages:
-- `docs: ...` documentation and appendices
+- `docs: ...` documentation and governance/evidence docs
 - `ci: ...` GitHub Actions / workflow changes
 - `feat: ...` new functionality
 - `fix: ...` bug fixes
 - `chore: ...` maintenance / refactors
 
 Examples:
-- `docs: add sensitivity scenario rows to Appendix D`
+- `docs: add sensitivity scenario rows to Scenario and Data Evidence`
 - `ci: enforce carbon budget via workflow`
 - `fix: handle empty rows in workbook CSV`
 

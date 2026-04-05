@@ -1,4 +1,4 @@
-# Appendix A — Architecture
+# System Architecture
 
 ## Overview
 
@@ -15,7 +15,7 @@ flowchart TD
     subgraph CI ["CI / GitHub Actions"]
         CIGate["Carbon Budget Gate\n(.github/workflows/carbon-budget.yml)"]
         Calc["calc_co2e.py\n(workbook/)"]
-        CSV["appendix-d-baseline-improved.csv\n(workbook/)"]
+        CSV["scenario-baseline-improved.csv\n(data/)"]
         CIGate --> Calc --> CSV
         Calc --> Pass{"PASS / FAIL"}
         Pass -->|PASS| Merge["Merge to main"]
@@ -64,7 +64,7 @@ flowchart TD
 ### CO₂e calculator
 
 - **File:** `workbook/calc_co2e.py`
-- **Inputs:** `workbook/appendix-d-baseline-improved.csv` (scenario parameters)
+- **Inputs:** `data/scenario-baseline-improved.csv` (scenario parameters)
 - **Formula:** `wh_total = small_requests × wh_small + large_requests × wh_large`; `gco2 = (wh_total / 1000) × grid_intensity_g_per_kwh`; `g_per_1k = gco2 / (requests_per_day / 1000)`
 - **Validation:** rejects missing fields, out-of-range rates, and non-positive request volumes
 
@@ -101,7 +101,7 @@ calc_co2e.py → CI gate (PASS/FAIL)
 
 data/grid_intensity_uk_summary.json  ┐
 scripts/probe_run_summary.json        ├─→ docs/index.html (GitHub Pages)
-workbook/appendix-d-baseline-improved.csv ┘
+data/scenario-baseline-improved.csv ┘
 ```
 
 ---
