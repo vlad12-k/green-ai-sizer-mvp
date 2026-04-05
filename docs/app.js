@@ -106,12 +106,18 @@ function setupTabs() {
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.tab;
-      buttons.forEach(b => b.classList.toggle('active', b === btn));
+      document.body.dataset.activeTab = target;
+      buttons.forEach(b => {
+        const selected = b === btn;
+        b.classList.toggle('active', selected);
+        b.setAttribute('aria-selected', selected ? 'true' : 'false');
+      });
       Object.entries(panels).forEach(([name, panel]) => {
         const active = name === target;
         if (panel) {
           panel.classList.toggle('active', active);
           panel.hidden = !active;
+          panel.setAttribute('aria-hidden', active ? 'false' : 'true');
         }
       });
     });
@@ -150,7 +156,13 @@ function renderBarChart(svgId, labels, values, suffix = '') {
     rect.setAttribute('width', String(barW));
     rect.setAttribute('height', String(barH));
     rect.setAttribute('fill', i === 1 ? '#1d8a55' : '#7dbf9f');
+    if (i === 1) rect.setAttribute('stroke', '#0b5633');
+    if (i === 1) rect.setAttribute('stroke-width', '2');
     svg.appendChild(rect);
+
+    const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+    title.textContent = `${label}: ${Number.isFinite(value) ? `${fmt(value, 1)}${suffix}` : 'unavailable'}`;
+    rect.appendChild(title);
 
     const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     txt.setAttribute('x', String(x + (barW / 2)));
@@ -173,6 +185,7 @@ function renderBarChart(svgId, labels, values, suffix = '') {
 async function loadDashboard() {
   updateState('state-loading', 'Loading evidence…');
   setupTabs();
+  document.body.dataset.activeTab = 'kpi';
 
   const files = [PATHS.gridSummary, PATHS.probeSummary, PATHS.workbookCSV];
   const statuses = {};

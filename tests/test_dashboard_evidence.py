@@ -51,6 +51,7 @@ class DashboardEvidenceTests(unittest.TestCase):
         self.assertIn("evidence/grid_intensity_uk_summary.json", app_js)
         self.assertIn("evidence/probe_run_summary.json", app_js)
         self.assertIn("evidence/scenario-baseline-improved.csv", app_js)
+        self.assertIn("val-latency-avg", app_js)
 
 
 if __name__ == "__main__":

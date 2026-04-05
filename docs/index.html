@@ -27,14 +27,14 @@
       <div id="last-updated-text" class="last-updated">Last updated: loading…</div>
     </section>
 
-    <nav class="tabs" aria-label="Dashboard sections">
-      <button class="tab-btn active" data-tab="kpi" type="button">KPI Overview</button>
-      <button class="tab-btn" data-tab="charts" type="button">Charts</button>
-      <button class="tab-btn" data-tab="governance" type="button">Governance</button>
-      <button class="tab-btn" data-tab="provenance" type="button">Evidence Provenance</button>
+    <nav class="tabs" aria-label="Dashboard sections" role="tablist">
+      <button id="tabbtn-kpi" class="tab-btn active" data-tab="kpi" type="button" role="tab" aria-selected="true" aria-controls="tab-kpi">KPI Overview</button>
+      <button id="tabbtn-charts" class="tab-btn" data-tab="charts" type="button" role="tab" aria-selected="false" aria-controls="tab-charts">Charts</button>
+      <button id="tabbtn-governance" class="tab-btn" data-tab="governance" type="button" role="tab" aria-selected="false" aria-controls="tab-governance">Governance</button>
+      <button id="tabbtn-provenance" class="tab-btn" data-tab="provenance" type="button" role="tab" aria-selected="false" aria-controls="tab-provenance">Evidence Provenance</button>
     </nav>
 
-    <section id="tab-kpi" class="tab-panel active" aria-labelledby="kpi-heading">
+    <section id="tab-kpi" class="tab-panel active" role="tabpanel" aria-labelledby="tabbtn-kpi" aria-hidden="false">
       <div class="section-head">
         <h2 id="kpi-heading">KPI overview</h2>
         <p>All cards are computed from committed files in <code>docs/evidence/</code>.</p>
@@ -53,7 +53,7 @@
       </div>
     </section>
 
-    <section id="tab-charts" class="tab-panel" aria-labelledby="charts-heading" hidden>
+    <section id="tab-charts" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-charts" hidden>
       <div class="section-head">
         <h2 id="charts-heading">Charts</h2>
         <p>Lightweight inline SVG charts rendered from committed evidence.</p>
@@ -70,7 +70,7 @@
       </div>
     </section>
 
-    <section id="tab-governance" class="tab-panel governance" aria-labelledby="gov-heading" hidden>
+    <section id="tab-governance" class="tab-panel governance" role="tabpanel" aria-labelledby="tabbtn-governance" hidden>
       <div class="section-head">
         <h2 id="gov-heading">Governance</h2>
         <p>Controls register summary, ADR list, and runbook links.</p>
@@ -103,7 +103,7 @@
       </div>
     </section>
 
-    <section id="tab-provenance" class="tab-panel provenance" aria-labelledby="prov-heading" hidden>
+    <section id="tab-provenance" class="tab-panel provenance" role="tabpanel" aria-labelledby="tabbtn-provenance" hidden>
       <div class="section-head">
         <h2 id="prov-heading">Evidence provenance</h2>
         <p>Evidence files used by this dashboard and their current load status.</p>

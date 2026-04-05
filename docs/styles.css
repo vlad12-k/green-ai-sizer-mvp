@@ -294,5 +294,12 @@ h1 {
   .header-links, .tabs { display: none !important; }
   .main-content { margin: .2in auto; }
   .kpi-card, .provenance-item { break-inside: avoid; }
-  .tab-panel { display: block !important; }
+  .tab-panel { display: none !important; }
+  body[data-active-tab="kpi"] #tab-kpi,
+  body:not([data-active-tab]) #tab-kpi,
+  body[data-active-tab="charts"] #tab-charts,
+  body[data-active-tab="governance"] #tab-governance,
+  body[data-active-tab="provenance"] #tab-provenance {
+    display: block !important;
+  }
 }
