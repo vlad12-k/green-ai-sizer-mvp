@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout (main)
@@ -41,16 +42,54 @@ jobs:
         run: |
           cp data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
 
-      - name: Commit and push updates to main when changed
+      - name: Commit changes and open/update PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
-          if git diff --cached --quiet; then
-            echo "No grid-intensity changes to commit."
+          if git diff --quiet -- data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json; then
+            echo "No grid-intensity changes."
             exit 0
           fi
 
+          BRANCH="automation/refresh-grid-intensity"
+          git checkout -B "${BRANCH}" main
+          git add data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
           git commit -m "data: refresh UK grid intensity snapshot (auto)"
-          git push origin HEAD:main
+          git push --force-with-lease origin "${BRANCH}"
+
+          PR_BODY="$(python - <<'PY'
+import json
+from pathlib import Path
+summary = json.loads(Path("data/grid_intensity_uk_summary.json").read_text())
+print(
+    "Automated UK grid-intensity refresh.\n\n"
+    f"- generated_utc: {summary['generated_utc']}\n"
+    f"- min_g_per_kwh: {summary['min_g_per_kwh']}\n"
+    f"- avg_g_per_kwh: {summary['avg_g_per_kwh']}\n"
+    f"- max_g_per_kwh: {summary['max_g_per_kwh']}\n"
+)
+PY
+          )"
+
+          PR_NUMBER="$(gh pr list --base main --head "${BRANCH}" --state open --json number --jq '.[0].number')"
+          if [ -z "${PR_NUMBER}" ]; then
+            PR_URL="$(gh pr create \
+              --base main \
+              --head "${BRANCH}" \
+              --title "data: refresh UK grid intensity snapshot (auto)" \
+              --body "${PR_BODY}")"
+            PR_NUMBER="$(gh pr view "${PR_URL}" --json number --jq '.number')"
+          else
+            gh pr edit "${PR_NUMBER}" \
+              --title "data: refresh UK grid intensity snapshot (auto)" \
+              --body "${PR_BODY}"
+          fi
+
+          if ! gh pr merge "${PR_NUMBER}" --auto --squash; then
+            echo "Auto-merge is disabled in repo settings. Enable Settings → General → Pull Requests → Allow auto-merge."
+          fi
