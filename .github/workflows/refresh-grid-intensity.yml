@@ -101,5 +101,6 @@ PY
           fi
 
           if ! gh pr merge "${PR_NUMBER}" --auto --squash; then
+            echo "Failed to enable auto-merge for PR #${PR_NUMBER} (could be repo settings, permissions, checks, or conflicts)."
             echo "Auto-merge is disabled in repo settings. Enable Settings → General → Pull Requests → Allow auto-merge."
           fi
