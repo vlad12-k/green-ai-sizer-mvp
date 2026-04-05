@@ -77,106 +77,145 @@ function updateState(kind, text) {
   el.textContent = text;
 }
 
-function getCommitHash() {
-  const p = new URLSearchParams(window.location.search);
-  const fromSha = p.get('sha');
-  if (fromSha) return fromSha;
-  const fromCommit = p.get('commit');
-  if (fromCommit) return fromCommit;
-  return null;
-}
-
-function renderProvenance(files) {
+function renderProvenance(files, statuses) {
   const holder = document.getElementById('provenance-list');
   if (!holder) return;
   holder.innerHTML = '';
-  const sha = getCommitHash();
   files.forEach(file => {
     const div = document.createElement('div');
     div.className = 'provenance-item';
-
-    const rowFile = document.createElement('div');
-    const fileStrong = document.createElement('strong');
-    fileStrong.textContent = 'File:';
-    const fileCode = document.createElement('code');
-    fileCode.textContent = file;
-    rowFile.appendChild(fileStrong);
-    rowFile.appendChild(document.createTextNode(' '));
-    rowFile.appendChild(fileCode);
-
-    const rowCommit = document.createElement('div');
-    const commitStrong = document.createElement('strong');
-    commitStrong.textContent = 'Commit:';
-    rowCommit.appendChild(commitStrong);
-    rowCommit.appendChild(document.createTextNode(' '));
-    if (sha) {
-      const commitCode = document.createElement('code');
-      commitCode.textContent = sha;
-      rowCommit.appendChild(commitCode);
-    } else {
-      rowCommit.appendChild(document.createTextNode('Not available in page context'));
-    }
-
-    div.appendChild(rowFile);
-    div.appendChild(rowCommit);
+    const fileLine = document.createElement('div');
+    fileLine.innerHTML = `<strong>File:</strong> <code>${file}</code>`;
+    const status = statuses[file];
+    const statusLine = document.createElement('div');
+    statusLine.innerHTML = `<strong>Status:</strong> <span class="${status.ok ? 'status-ok' : 'status-fail'}">${status.ok ? 'loaded' : 'failed'}</span>${status.message ? ` — ${status.message}` : ''}`;
+    div.appendChild(fileLine);
+    div.appendChild(statusLine);
     holder.appendChild(div);
   });
 }
 
-function setLiveStatus(grid) {
-  const liveStatusHeading = document.getElementById('live-status-heading');
-  if (!liveStatusHeading) return;
+function setupTabs() {
+  const buttons = Array.from(document.querySelectorAll('.tab-btn'));
+  const panels = {
+    kpi: document.getElementById('tab-kpi'),
+    charts: document.getElementById('tab-charts'),
+    governance: document.getElementById('tab-governance'),
+    provenance: document.getElementById('tab-provenance')
+  };
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      document.body.dataset.activeTab = target;
+      buttons.forEach(b => {
+        const selected = b === btn;
+        b.classList.toggle('active', selected);
+        b.setAttribute('aria-selected', selected ? 'true' : 'false');
+      });
+      Object.entries(panels).forEach(([name, panel]) => {
+        const active = name === target;
+        if (panel) {
+          panel.classList.toggle('active', active);
+          panel.hidden = !active;
+          panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+        }
+      });
+    });
+  });
+}
+
+function setLastUpdated(grid) {
   if (grid && grid.generated_utc) {
-    const ts = new Date(grid.generated_utc).toUTCString();
-    liveStatusHeading.textContent = `Live status — updated ${ts}`;
+    setText('last-updated-text', `Last updated: ${new Date(grid.generated_utc).toUTCString()} (from docs/evidence/grid_intensity_uk_summary.json)`);
   } else {
-    liveStatusHeading.textContent = 'Live status — timestamp unavailable';
+    setText('last-updated-text', 'Last updated: unavailable in summary JSON');
   }
 }
 
-function setupTooltips() {
-  const tooltip = document.getElementById('tooltip');
-  if (!tooltip) return;
-  document.querySelectorAll('.tooltip-btn').forEach(btn => {
-    const show = (e) => {
-      tooltip.innerHTML = `${btn.dataset.tooltip} <a href="evidence/index.md" style="color:#9ce7bf">Evidence index</a>.`;
-      tooltip.hidden = false;
-      const x = e.clientX + 12;
-      const y = e.clientY + 12;
-      tooltip.style.left = `${x}px`;
-      tooltip.style.top = `${y}px`;
-    };
-    const hide = () => { tooltip.hidden = true; };
-    btn.addEventListener('mouseenter', show);
-    btn.addEventListener('mousemove', show);
-    btn.addEventListener('mouseleave', hide);
-    btn.addEventListener('focus', () => {
-      tooltip.innerHTML = `${btn.dataset.tooltip} <a href="evidence/index.md" style="color:#9ce7bf">Evidence index</a>.`;
-      tooltip.hidden = false;
-      const rect = btn.getBoundingClientRect();
-      tooltip.style.left = `${rect.left + 12}px`;
-      tooltip.style.top = `${rect.bottom + 8}px`;
-    });
-    btn.addEventListener('blur', hide);
+function renderBarChart(svgId, labels, values, suffix = '') {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = '';
+  const width = 360;
+  const height = 180;
+  const margin = { top: 10, right: 10, bottom: 28, left: 28 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+  const max = Math.max(...values.filter(Number.isFinite), 1);
+
+  labels.forEach((label, i) => {
+    const value = Number(values[i]);
+    const barW = innerW / labels.length - 12;
+    const x = margin.left + i * (barW + 12);
+    const barH = Number.isFinite(value) ? (value / max) * innerH : 0;
+    const y = margin.top + (innerH - barH);
+
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', String(x));
+    rect.setAttribute('y', String(y));
+    rect.setAttribute('width', String(barW));
+    rect.setAttribute('height', String(barH));
+    rect.setAttribute('fill', i === 1 ? '#1d8a55' : '#7dbf9f');
+    if (i === 1) rect.setAttribute('stroke', '#0b5633');
+    if (i === 1) rect.setAttribute('stroke-width', '2');
+    svg.appendChild(rect);
+
+    const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+    title.textContent = `${label}: ${Number.isFinite(value) ? `${fmt(value, 1)}${suffix}` : 'unavailable'}`;
+    rect.appendChild(title);
+
+    const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    txt.setAttribute('x', String(x + (barW / 2)));
+    txt.setAttribute('y', String(y - 4));
+    txt.setAttribute('text-anchor', 'middle');
+    txt.setAttribute('font-size', '11');
+    txt.textContent = Number.isFinite(value) ? `${fmt(value, 1)}${suffix}` : '—';
+    svg.appendChild(txt);
+
+    const lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    lbl.setAttribute('x', String(x + (barW / 2)));
+    lbl.setAttribute('y', String(height - 8));
+    lbl.setAttribute('text-anchor', 'middle');
+    lbl.setAttribute('font-size', '11');
+    lbl.textContent = label;
+    svg.appendChild(lbl);
   });
 }
 
 async function loadDashboard() {
   updateState('state-loading', 'Loading evidence…');
+  setupTabs();
+  document.body.dataset.activeTab = 'kpi';
 
   const files = [PATHS.gridSummary, PATHS.probeSummary, PATHS.workbookCSV];
-  renderProvenance(files);
+  const statuses = {};
+  files.forEach(f => { statuses[f] = { ok: false, message: 'not loaded' }; });
 
   let grid, probe, csvText;
   try {
-    [grid, probe, csvText] = await Promise.all([
-      fetchJSON(PATHS.gridSummary),
-      fetchJSON(PATHS.probeSummary),
-      fetchText(PATHS.workbookCSV)
-    ]);
+    grid = await fetchJSON(PATHS.gridSummary);
+    statuses[PATHS.gridSummary] = { ok: true, message: '' };
   } catch (err) {
+    statuses[PATHS.gridSummary] = { ok: false, message: err.message };
+  }
+  try {
+    probe = await fetchJSON(PATHS.probeSummary);
+    statuses[PATHS.probeSummary] = { ok: true, message: '' };
+  } catch (err) {
+    statuses[PATHS.probeSummary] = { ok: false, message: err.message };
+  }
+  try {
+    csvText = await fetchText(PATHS.workbookCSV);
+    statuses[PATHS.workbookCSV] = { ok: true, message: '' };
+  } catch (err) {
+    statuses[PATHS.workbookCSV] = { ok: false, message: err.message };
+  }
+
+  renderProvenance(files, statuses);
+
+  if (!statuses[PATHS.gridSummary].ok || !statuses[PATHS.probeSummary].ok || !statuses[PATHS.workbookCSV].ok) {
     updateState('state-error', 'Evidence file missing');
-    setText('last-updated-text', `Error: ${err.message}`);
+    setText('last-updated-text', 'Last updated: unavailable (one or more files failed to load)');
     return;
   }
 
@@ -199,31 +238,31 @@ async function loadDashboard() {
 
     setText('val-cache', pct(Number(probe.cache_hit_rate_observed)));
     setText('val-route', pct(Number(probe.small_route_rate_observed)));
+    const avgLatency = Number(probe.avg_latency_ms);
+    setText('val-latency-avg', Number.isFinite(avgLatency) ? `${fmt(avgLatency, 0)} ms` : 'N/A');
 
     const p95 = Number(probe.p95_latency_ms);
     setText('val-latency-p95', Number.isFinite(p95) ? `${fmt(p95, 0)} ms` : 'N/A');
 
-    setText('val-grid-min', `${fmt(Number(grid.min_g_per_kwh), 1)} gCO₂/kWh`);
-    setText('val-grid-avg', `${fmt(Number(grid.avg_g_per_kwh), 1)} gCO₂/kWh`);
-    setText('val-grid-max', `${fmt(Number(grid.max_g_per_kwh), 1)} gCO₂/kWh`);
+    const gridMin = Number(grid.min_g_per_kwh);
+    const gridAvg = Number(grid.avg_g_per_kwh);
+    const gridMax = Number(grid.max_g_per_kwh);
+    setText('val-grid-min', `${fmt(gridMin, 1)} gCO₂/kWh`);
+    setText('val-grid-avg', `${fmt(gridAvg, 1)} gCO₂/kWh`);
+    setText('val-grid-max', `${fmt(gridMax, 1)} gCO₂/kWh`);
+    setLastUpdated(grid);
 
-    if (grid.generated_utc) {
-      setText('last-updated-text', `Last updated: ${new Date(grid.generated_utc).toUTCString()} (from evidence/grid_intensity_uk_summary.json)`);
-    } else {
-      setText('last-updated-text', 'Last updated: unavailable in summary JSON');
-    }
-    setLiveStatus(grid);
+    renderBarChart('chart-carbon', ['Baseline', 'Improved'], [baselineG, improvedG], 'g');
+    renderBarChart('chart-grid', ['Min', 'Avg', 'Max'], [gridMin, gridAvg, gridMax], '');
 
     const hasPartial = !Number.isFinite(p95);
     updateState(hasPartial ? 'state-warn' : 'state-ok', hasPartial ? 'Loaded with partial metrics' : 'Loaded');
   } catch (err) {
     updateState('state-error', 'Malformed evidence data');
-    setText('last-updated-text', `Error: ${err.message}`);
-    setLiveStatus(null);
+    setText('last-updated-text', `Last updated: error (${err.message})`);
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  setupTooltips();
   loadDashboard();
 });

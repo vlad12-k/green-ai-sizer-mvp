@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Green AI Sizer Console</title>
+  <title>Green AI Sizer Governance Dashboard</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,8 +11,8 @@
     <div class="header-inner">
       <div>
         <p class="eyebrow">Green AI Sizer</p>
-        <h1>Green AI Sizer Console</h1>
-        <p class="subtitle">Product-style carbon efficiency and governance view powered by committed evidence only.</p>
+        <h1>Governance Dashboard</h1>
+        <p class="subtitle">Carbon efficiency, controls, and evidence status from committed dashboard evidence files.</p>
       </div>
       <div class="header-links">
         <a href="https://github.com/vlad12-k/green-ai-sizer-mvp" target="_blank" rel="noopener">Repository</a>
@@ -26,119 +26,95 @@
       <div id="dashboard-state" class="state-chip state-loading">Loading evidence…</div>
       <div id="last-updated-text" class="last-updated">Last updated: loading…</div>
     </section>
-    <section class="live-status" aria-labelledby="live-status-heading">
-      <h2 id="live-status-heading">Live status</h2>
-      <ul class="live-status-links">
-        <li><a href="evidence/grid_intensity_uk_summary.json">Grid summary evidence (JSON)</a></li>
-        <li><a href="evidence/probe_run_summary.json">Probe summary evidence (JSON)</a></li>
-        <li><a href="https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/refresh-grid-intensity.yml" target="_blank" rel="noopener">Refresh workflow (open latest run)</a></li>
-      </ul>
-    </section>
 
-    <section aria-labelledby="kpi-heading">
+    <nav class="tabs" aria-label="Dashboard sections" role="tablist">
+      <button id="tabbtn-kpi" class="tab-btn active" data-tab="kpi" type="button" role="tab" aria-selected="true" aria-controls="tab-kpi">KPI Overview</button>
+      <button id="tabbtn-charts" class="tab-btn" data-tab="charts" type="button" role="tab" aria-selected="false" aria-controls="tab-charts">Charts</button>
+      <button id="tabbtn-governance" class="tab-btn" data-tab="governance" type="button" role="tab" aria-selected="false" aria-controls="tab-governance">Governance</button>
+      <button id="tabbtn-provenance" class="tab-btn" data-tab="provenance" type="button" role="tab" aria-selected="false" aria-controls="tab-provenance">Evidence Provenance</button>
+    </nav>
+
+    <section id="tab-kpi" class="tab-panel active" role="tabpanel" aria-labelledby="tabbtn-kpi" aria-hidden="false">
       <div class="section-head">
-        <h2 id="kpi-heading">Key performance indicators</h2>
+        <h2 id="kpi-heading">KPI overview</h2>
         <p>All cards are computed from committed files in <code>docs/evidence/</code>.</p>
       </div>
-
       <div class="kpi-grid">
+        <article class="kpi-card"><h3>Baseline gCO₂e / 1k</h3><p id="val-baseline" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/scenario-baseline-improved.csv</code></p></article>
+        <article class="kpi-card kpi-highlight"><h3>Improved gCO₂e / 1k</h3><p id="val-improved" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/scenario-baseline-improved.csv</code></p></article>
+        <article class="kpi-card kpi-highlight"><h3>Reduction vs baseline</h3><p id="val-reduction" class="kpi-value">—</p><p class="kpi-meta"><a href="evidence/index.md">Method reference</a></p></article>
+        <article class="kpi-card"><h3>Cache hit rate</h3><p id="val-cache" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/probe_run_summary.json</code></p></article>
+        <article class="kpi-card"><h3>Small-route rate</h3><p id="val-route" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/probe_run_summary.json</code></p></article>
+        <article class="kpi-card"><h3>Average latency</h3><p id="val-latency-avg" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/probe_run_summary.json</code></p></article>
+        <article class="kpi-card"><h3>p95 latency</h3><p id="val-latency-p95" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/probe_run_summary.json</code></p></article>
+        <article class="kpi-card"><h3>Grid intensity (min)</h3><p id="val-grid-min" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/grid_intensity_uk_summary.json</code></p></article>
+        <article class="kpi-card"><h3>Grid intensity (avg)</h3><p id="val-grid-avg" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/grid_intensity_uk_summary.json</code></p></article>
+        <article class="kpi-card"><h3>Grid intensity (max)</h3><p id="val-grid-max" class="kpi-value">—</p><p class="kpi-meta"><code>docs/evidence/grid_intensity_uk_summary.json</code></p></article>
+      </div>
+    </section>
+
+    <section id="tab-charts" class="tab-panel" role="tabpanel" aria-labelledby="tabbtn-charts" hidden>
+      <div class="section-head">
+        <h2 id="charts-heading">Charts</h2>
+        <p>Lightweight inline SVG charts rendered from committed evidence.</p>
+      </div>
+      <div class="chart-grid">
         <article class="kpi-card">
-          <div class="kpi-head">
-            <h3>Baseline gCO₂e / 1k</h3>
-            <button class="tooltip-btn" data-tooltip="Estimated grams CO₂e per 1,000 requests for baseline scenario, computed with workbook formula from scenario CSV inputs.">?</button>
-          </div>
-          <p id="val-baseline" class="kpi-value">—</p>
-          <p class="kpi-meta"><code>evidence/scenario-baseline-improved.csv</code></p>
+          <h3>gCO₂e / 1k requests</h3>
+          <svg id="chart-carbon" class="chart-svg" viewBox="0 0 360 180" role="img" aria-label="Carbon per 1k comparison"></svg>
         </article>
-
-        <article class="kpi-card kpi-highlight">
-          <div class="kpi-head">
-            <h3>Improved gCO₂e / 1k</h3>
-            <button class="tooltip-btn" data-tooltip="Estimated grams CO₂e per 1,000 requests for improved scenario from the same workbook-compatible calculation.">?</button>
-          </div>
-          <p id="val-improved" class="kpi-value">—</p>
-          <p class="kpi-meta"><code>evidence/scenario-baseline-improved.csv</code></p>
-        </article>
-
-        <article class="kpi-card kpi-highlight">
-          <div class="kpi-head">
-            <h3>Reduction vs baseline</h3>
-            <button class="tooltip-btn" data-tooltip="Percent reduction = (1 - improved/baseline) × 100 using computed gCO₂e/1k values.">?</button>
-          </div>
-          <p id="val-reduction" class="kpi-value">—</p>
-          <p class="kpi-meta"><a href="evidence/index.md">Method reference</a></p>
-        </article>
-
         <article class="kpi-card">
-          <div class="kpi-head">
-            <h3>Cache hit rate</h3>
-            <button class="tooltip-btn" data-tooltip="Observed cache hit ratio from probe run summary: served from cache ÷ total successful probe requests.">?</button>
-          </div>
-          <p id="val-cache" class="kpi-value">—</p>
-          <p class="kpi-meta"><code>evidence/probe_run_summary.json</code></p>
-        </article>
-
-        <article class="kpi-card">
-          <div class="kpi-head">
-            <h3>Small-route rate</h3>
-            <button class="tooltip-btn" data-tooltip="Observed fraction of requests routed through the small-model path during probing.">?</button>
-          </div>
-          <p id="val-route" class="kpi-value">—</p>
-          <p class="kpi-meta"><code>evidence/probe_run_summary.json</code></p>
-        </article>
-
-        <article class="kpi-card">
-          <div class="kpi-head">
-            <h3>p95 latency</h3>
-            <button class="tooltip-btn" data-tooltip="95th percentile response latency (ms) from probe summary, when available.">?</button>
-          </div>
-          <p id="val-latency-p95" class="kpi-value">—</p>
-          <p class="kpi-meta"><code>evidence/probe_run_summary.json</code></p>
-        </article>
-
-        <article class="kpi-card">
-          <div class="kpi-head">
-            <h3>Grid intensity (min)</h3>
-            <button class="tooltip-btn" data-tooltip="Minimum UK grid carbon intensity in gCO₂/kWh over the summary window.">?</button>
-          </div>
-          <p id="val-grid-min" class="kpi-value">—</p>
-          <p class="kpi-meta"><code>evidence/grid_intensity_uk_summary.json</code></p>
-        </article>
-
-        <article class="kpi-card">
-          <div class="kpi-head">
-            <h3>Grid intensity (avg)</h3>
-            <button class="tooltip-btn" data-tooltip="Average UK grid carbon intensity in gCO₂/kWh over the summary window.">?</button>
-          </div>
-          <p id="val-grid-avg" class="kpi-value">—</p>
-          <p class="kpi-meta"><code>evidence/grid_intensity_uk_summary.json</code></p>
-        </article>
-
-        <article class="kpi-card">
-          <div class="kpi-head">
-            <h3>Grid intensity (max)</h3>
-            <button class="tooltip-btn" data-tooltip="Maximum UK grid carbon intensity in gCO₂/kWh over the summary window.">?</button>
-          </div>
-          <p id="val-grid-max" class="kpi-value">—</p>
-          <p class="kpi-meta"><code>evidence/grid_intensity_uk_summary.json</code></p>
+          <h3>Grid intensity min / avg / max</h3>
+          <svg id="chart-grid" class="chart-svg" viewBox="0 0 360 180" role="img" aria-label="Grid intensity summary"></svg>
         </article>
       </div>
     </section>
 
-    <section class="provenance" aria-labelledby="prov-heading">
+    <section id="tab-governance" class="tab-panel governance" role="tabpanel" aria-labelledby="tabbtn-governance" hidden>
       <div class="section-head">
-        <h2 id="prov-heading">Provenance</h2>
-        <p>Evidence files used by this page and optional commit hash from GitHub Pages query string (<code>?sha=...</code>).</p>
+        <h2 id="gov-heading">Governance</h2>
+        <p>Controls register summary, ADR list, and runbook links.</p>
+      </div>
+      <div class="governance-grid">
+        <article class="kpi-card">
+          <h3>Controls register summary</h3>
+          <ul>
+            <li><a href="governance/controls.md">Controls register</a></li>
+            <li><a href="governance/risk-register.md">Risk register</a></li>
+            <li><a href="governance/kpis.md">KPI definitions</a></li>
+            <li><a href="governance/raci.md">RACI</a></li>
+          </ul>
+        </article>
+        <article class="kpi-card">
+          <h3>ADRs</h3>
+          <ul>
+            <li><a href="adr/ADR-001-carbon-budget-gate.md">ADR-001 Carbon budget gate</a></li>
+            <li><a href="adr/ADR-002-evidence-pack-dashboard.md">ADR-002 Evidence pack dashboard</a></li>
+            <li><a href="adr/ADR-003-secret-handling.md">ADR-003 Secret handling</a></li>
+          </ul>
+        </article>
+        <article class="kpi-card">
+          <h3>Runbook</h3>
+          <ul>
+            <li><a href="governance/runbook.md">Operator runbook</a></li>
+            <li><a href="ops/github-actions.md">GitHub Actions operations</a></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="tab-provenance" class="tab-panel provenance" role="tabpanel" aria-labelledby="tabbtn-provenance" hidden>
+      <div class="section-head">
+        <h2 id="prov-heading">Evidence provenance</h2>
+        <p>Evidence files used by this dashboard and their current load status.</p>
       </div>
       <div id="provenance-list" class="provenance-list"></div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>No external APIs. No framework bundle. Static HTML/CSS/JS only.</p>
+    <p>Static HTML/CSS/JS only. No external chart or frontend libraries.</p>
   </footer>
-
-  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
 
   <script src="app.js"></script>
 </body>

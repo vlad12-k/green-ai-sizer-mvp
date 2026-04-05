@@ -15,7 +15,7 @@ Green AI Sizer is a lightweight, auditable toolkit for teams running AI-assisted
 ## What makes this production-grade
 - **CI Carbon Budget Gate:** `.github/workflows/carbon-budget.yml` runs `python workbook/calc_co2e.py 200` and blocks budget regressions.
 - **Evidence pack:** dashboard consumes committed files under `docs/evidence/` only.
-- **Automated refresh:** `.github/workflows/refresh-grid-intensity.yml` updates grid evidence and opens auto-merge PRs when configured.
+- **Automated refresh:** `.github/workflows/refresh-grid-intensity.yml` updates grid evidence and commits directly to `main` when data changes.
 - **Automated checks:** `make check` validates evidence contracts and critical output shapes.
 
 ## Where is the AI?

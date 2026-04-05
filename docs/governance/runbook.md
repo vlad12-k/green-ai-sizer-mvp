@@ -65,7 +65,7 @@ If you see `FAIL: Budget exceeded`, the improved scenario in `data/scenario-base
 
 ### 3a. Grid intensity snapshot (automated)
 
-The `refresh-grid-intensity.yml` workflow runs daily at 06:10 UTC, refreshes `data/grid_intensity_uk_snapshot.csv` and `data/grid_intensity_uk_summary.json`, syncs `docs/evidence/grid_intensity_uk_summary.json` for dashboard freshness, and opens/updates an automation PR against `main`.
+The `refresh-grid-intensity.yml` workflow runs daily at 06:10 UTC, refreshes `data/grid_intensity_uk_snapshot.csv` and `data/grid_intensity_uk_summary.json`, syncs `docs/evidence/grid_intensity_uk_summary.json` for dashboard freshness, and commits directly to `main` only when data changed.
 
 **To trigger manually:**
 
