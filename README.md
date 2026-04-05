@@ -40,3 +40,11 @@ python workbook/calc_co2e.py 200
 
 ## License
 [MIT](LICENSE)
+
+
+## Quality checks
+Run all minimal production-grade checks locally:
+```bash
+make check
+```
+This runs tests for dashboard evidence loading/parsing, Carbon Budget Gate output fields, MIGRATION path resolution, plus a smoke validation script.
