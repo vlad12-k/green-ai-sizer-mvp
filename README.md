@@ -3,10 +3,10 @@
 # Green AI Sizer MVP
 
 ## Problem
-AI usage can silently increase operational emissions unless inference demand is measured and constrained.
+Climate-critical digital services operate under heatwave stress and grid volatility. AI usage can improve responsiveness, but unmanaged inference demand can silently increase baseline emissions and cost.
 
 ## Solution
-Green AI Sizer MVP enforces a CI carbon budget gate and maintains auditable evidence for routing, caching, and grid-intensity inputs.
+Green AI Sizer MVP adds enforceable controls: a CI carbon budget gate, versioned scenario inputs, and auditable evidence for routing, caching, and grid-intensity assumptions so sustainability constraints stay operational rather than narrative.
 
 ## How it works
 - CI runs `python workbook/calc_co2e.py 200` and fails when improved gCO₂e/1k exceeds budget.

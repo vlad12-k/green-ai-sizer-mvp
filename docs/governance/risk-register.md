@@ -1,5 +1,7 @@
 # Risk Register
 
+This register tracks key sustainability, reliability, and governance risks, their likely impact, and active mitigations.
+
 | Risk | Cause | Impact | Likelihood | Mitigation | Burden shifting (where impact moves) |
 |---|---|---|---|---|---|
 | Rebound effect | AI becomes cheaper/faster → more use | Total CO₂e rises | Medium | Budgets, quotas, feature-level accounting | More policy work / user friction |

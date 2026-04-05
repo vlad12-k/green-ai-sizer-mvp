@@ -1,7 +1,5 @@
 # System Boundary
 
-## System boundary (what is included)
-
 This emissions method covers operational emissions for:
 
 - Inference orchestration (routing and fallback logic)
