@@ -123,6 +123,17 @@ function renderProvenance(files) {
   });
 }
 
+function setLiveStatus(grid) {
+  const liveStatusHeading = document.getElementById('live-status-heading');
+  if (!liveStatusHeading) return;
+  if (grid && grid.generated_utc) {
+    const ts = new Date(grid.generated_utc).toUTCString();
+    liveStatusHeading.textContent = `Live status — updated ${ts}`;
+  } else {
+    liveStatusHeading.textContent = 'Live status — timestamp unavailable';
+  }
+}
+
 function setupTooltips() {
   const tooltip = document.getElementById('tooltip');
   if (!tooltip) return;
@@ -201,12 +212,14 @@ async function loadDashboard() {
     } else {
       setText('last-updated-text', 'Last updated: unavailable in summary JSON');
     }
+    setLiveStatus(grid);
 
     const hasPartial = !Number.isFinite(p95);
     updateState(hasPartial ? 'state-warn' : 'state-ok', hasPartial ? 'Loaded with partial metrics' : 'Loaded');
   } catch (err) {
     updateState('state-error', 'Malformed evidence data');
     setText('last-updated-text', `Error: ${err.message}`);
+    setLiveStatus(null);
   }
 }
 
