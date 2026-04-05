@@ -18,7 +18,7 @@ Why: the refresh workflow needs to push to an automation branch and create/updat
 
 ### 2) Branch protection for `main`
 In **Settings → Branches**:
-- Keep direct pushes to `main` blocked by rulesets (GH013).
+- Keep `main` protected by rulesets that require pull requests (GH013).
 - Keep required checks on PRs to `main` (including `carbon-budget`).
 
 Why: scheduled automation now updates `automation/refresh-grid-intensity`, opens/updates a PR to `main`, and uses auto-merge squash once required checks pass.
