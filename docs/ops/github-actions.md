@@ -14,14 +14,23 @@ This document defines required repository settings for fully automated daily gri
 In **Settings → Actions → General**:
 - **Workflow permissions:** `Read and write permissions`
 
-Why: the refresh workflow needs to push to an automation branch and create/update pull requests using `${{ secrets.GITHUB_TOKEN }}`.
+Why: the refresh workflow needs to push to an automation branch and create/update pull requests.
 
 ### 2) Branch protection for `main`
 In **Settings → Branches**:
 - Keep `main` protected by rulesets that require pull requests (GH013).
 - Keep required checks on PRs to `main` (including `carbon-budget`).
 
-Why: scheduled automation now updates `automation/refresh-grid-intensity`, opens/updates a PR to `main`, and uses auto-merge squash once required checks pass.
+Why: scheduled automation now updates `automation/refresh-grid-intensity`, opens/updates a PR to `main`, and uses auto-merge squash once required checks pass. `carbon-budget` remains on `pull_request` + `push` to `main` (safe default), and should not be switched to `pull_request_target`.
+
+### 4) Repository secret for automation bot token
+In **Settings → Secrets and variables → Actions**:
+- Add secret **`GH_BOT_TOKEN`** with a fine-grained PAT that has repository access needed to:
+  - push to `automation/refresh-grid-intensity`
+  - create/edit PRs to `main`
+  - enable auto-merge via GitHub CLI
+
+Why: PRs created by `github-actions[bot]` with default `GITHUB_TOKEN` may not reliably trigger required PR checks. Using `GH_BOT_TOKEN` ensures the automation PR receives a real `carbon-budget` status check instead of remaining in “Expected”.
 
 ### 3) Pull request settings
 In **Settings → General → Pull Requests**:
@@ -42,6 +51,6 @@ If auto-merge is not enabled, the workflow logs:
 `Auto-merge is disabled in repo settings. Enable Settings → General → Pull Requests → Allow auto-merge.`
 
 ## Secret safety
-- Uses only `${{ secrets.GITHUB_TOKEN }}` for workflow push operations.
+- Uses `${{ secrets.GH_BOT_TOKEN }}` for checkout/push and GitHub CLI PR operations in the refresh workflow.
 - Does not print tokens or secret values in logs.
 - Fetch script calls only the public NESO API and stores no credentials.
