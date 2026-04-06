@@ -1,16 +1,21 @@
 name: Carbon Budget Gate
 
 on:
-  pull_request:
+  pull_request_target:
   push:
     branches: [ "main" ]
 
 jobs:
   carbon-budget:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
