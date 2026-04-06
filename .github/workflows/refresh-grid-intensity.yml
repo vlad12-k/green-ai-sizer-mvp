@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout (main)
@@ -37,20 +38,73 @@ jobs:
           test -f data/grid_intensity_uk_snapshot.csv
           test -f data/grid_intensity_uk_summary.json
 
-      - name: Sync dashboard evidence summary
+      - name: Sync dashboard evidence mirror
         run: |
           cp data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
+          if [ -f data/grid_intensity_uk_snapshot.csv ]; then
+            cp data/grid_intensity_uk_snapshot.csv docs/evidence/grid_intensity_uk_snapshot.csv
+          fi
 
-      - name: Commit and push updates to main when changed
+      - name: Commit changes and open/update PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
-          if git diff --cached --quiet; then
-            echo "No grid-intensity changes to commit."
+          if git diff --quiet -- data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json; then
+            echo "No grid-intensity changes."
             exit 0
           fi
 
+          BRANCH="automation/refresh-grid-intensity"
+          git checkout -B "${BRANCH}"
+          git add data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
           git commit -m "data: refresh UK grid intensity snapshot (auto)"
-          git push origin HEAD:main
+          if ! git push origin "${BRANCH}"; then
+            git push --force-with-lease origin "${BRANCH}"
+          fi
+
+          PR_BODY="$(python - <<'PY'
+import json
+from pathlib import Path
+summary_path = Path("data/grid_intensity_uk_summary.json")
+try:
+    summary = json.loads(summary_path.read_text())
+except FileNotFoundError:
+    raise SystemExit(f"Missing required summary file: {summary_path}")
+except json.JSONDecodeError as exc:
+    raise SystemExit(f"Invalid JSON in {summary_path}: {exc}")
+required_keys = ["generated_utc", "min_g_per_kwh", "avg_g_per_kwh", "max_g_per_kwh"]
+missing = [key for key in required_keys if key not in summary]
+if missing:
+    raise SystemExit(f"Missing required key(s) in {summary_path}: {', '.join(missing)}")
+print(
+    "Automated UK grid-intensity refresh.\n\n"
+    f"- generated_utc: {summary['generated_utc']}\n"
+    f"- min_g_per_kwh: {summary['min_g_per_kwh']}\n"
+    f"- avg_g_per_kwh: {summary['avg_g_per_kwh']}\n"
+    f"- max_g_per_kwh: {summary['max_g_per_kwh']}\n"
+)
+PY
+          )"
+
+          PR_NUMBER="$(gh pr list --base main --head "${BRANCH}" --state open --json number --jq 'if length > 0 then .[0].number else empty end')"
+          if [ -z "${PR_NUMBER}" ]; then
+            PR_URL="$(gh pr create \
+              --base main \
+              --head "${BRANCH}" \
+              --title "data: refresh UK grid intensity snapshot (auto)" \
+              --body "${PR_BODY}")"
+            PR_NUMBER="$(gh pr view "${PR_URL}" --json number --jq '.number')"
+          else
+            gh pr edit "${PR_NUMBER}" \
+              --title "data: refresh UK grid intensity snapshot (auto)" \
+              --body "${PR_BODY}"
+          fi
+
+          if ! gh pr merge "${PR_NUMBER}" --auto --squash; then
+            echo "Auto-merge is disabled in repo settings. Enable Settings → General → Pull Requests → Allow auto-merge."
+          fi
