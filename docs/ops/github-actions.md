@@ -23,7 +23,7 @@ In **Settings → Branches**:
 
 Why: scheduled automation now updates `automation/refresh-grid-intensity`, opens/updates a PR to `main`, and uses auto-merge squash once required checks pass. `carbon-budget` remains on `pull_request` + `push` to `main` (safe default), and should not be switched to `pull_request_target`.
 
-### 4) Repository secret for automation bot token
+### 3) Repository secret for automation bot token
 In **Settings → Secrets and variables → Actions**:
 - Add secret **`GH_BOT_TOKEN`** with a fine-grained PAT that has repository access needed to:
   - push to `automation/refresh-grid-intensity`
@@ -32,7 +32,7 @@ In **Settings → Secrets and variables → Actions**:
 
 Why: PRs created by `github-actions[bot]` with default `GITHUB_TOKEN` may not reliably trigger required PR checks. Using `GH_BOT_TOKEN` ensures the automation PR receives a real `carbon-budget` status check instead of remaining in “Expected”.
 
-### 3) Pull request settings
+### 4) Pull request settings
 In **Settings → General → Pull Requests**:
 - Enable **Allow auto-merge**.
 
