@@ -29,7 +29,7 @@ jobs:
       - name: Copy trusted calculator and untrusted data snapshot
         if: github.event_name == 'pull_request_target'
         run: |
-          mkdir -p data workbook
+          mkdir -p data
           cp pr-head/data/scenario-baseline-improved.csv data/scenario-baseline-improved.csv
 
       - name: Checkout current ref
