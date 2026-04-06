@@ -60,7 +60,7 @@ jobs:
           fi
 
           BRANCH="automation/refresh-grid-intensity"
-          git checkout -B "${BRANCH}" origin/main
+          git checkout -B "${BRANCH}"
           git add data/grid_intensity_uk_snapshot.csv data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
           git commit -m "data: refresh UK grid intensity snapshot (auto)"
           if ! git push origin "${BRANCH}"; then
