@@ -16,6 +16,56 @@ AI services run continuously while grid intensity and demand conditions vary; th
 3. **CI Carbon Budget Gate**: pull requests and main pushes run `python workbook/calc_co2e.py 200`.
 4. **Daily grid refresh automation**: scheduled workflow refreshes UK grid evidence and auto-merges automation PRs when checks pass.
 
+## Architecture
+
+- Evidence is captured and versioned in `docs/evidence/` and source data files under `data/`.
+- The static dashboard (`docs/index.html` + `docs/app.js`) reads committed evidence artifacts and renders governance KPIs.
+- The CI Carbon Budget Gate (`.github/workflows/carbon-budget.yml`) enforces the CO₂e threshold on pull requests and `main`.
+- Daily refresh automation (`.github/workflows/refresh-grid-intensity.yml`) updates grid evidence and opens/updates the automation PR.
+- After checks pass, the refresh PR auto-merges to `main`, and GitHub Pages serves the updated evidence-backed dashboard.
+
+Architecture document: [docs/architecture/system-architecture.md](docs/architecture/system-architecture.md)
+
+```mermaid
+flowchart TD
+    subgraph CI ["CI / GitHub Actions"]
+        CIGate["Carbon Budget Gate\n(.github/workflows/carbon-budget.yml)"]
+        Calc["calc_co2e.py\n(workbook/)"]
+        CSV["scenario-baseline-improved.csv\n(data/)"]
+        CIGate --> Calc --> CSV
+        Calc --> Pass{"PASS / FAIL"}
+        Pass -->|PASS| Merge["Merge to main"]
+        Pass -->|FAIL| Block["Block merge"]
+    end
+
+    subgraph DataRefresh ["Grid data refresh (scheduled)"]
+        GridAPI["NESO Carbon Intensity API\n(public, no key)"]
+        FetchScript["fetch_uk_grid_intensity.py\n(scripts/)"]
+        GridCSV["data/grid_intensity_uk_snapshot.csv"]
+        GridJSON["data/grid_intensity_uk_summary.json"]
+        GridAPI -->|Daily via Actions| FetchScript
+        FetchScript --> GridCSV
+        FetchScript --> GridJSON
+    end
+
+    subgraph Endpoint ["Optional live endpoint"]
+        AzFunc["Azure Function\n(app/orchestrator)"]
+        ProbeScript["probe_endpoint.py\n(scripts/)"]
+        ProbeSummary["probe_run_summary.json\n(scripts/)"]
+        AzFunc -->|HTTP probe| ProbeScript
+        ProbeScript --> ProbeSummary
+    end
+
+    subgraph Dashboard ["Static monitoring dashboard"]
+        Pages["docs/index.html\n(GitHub Pages)"]
+    end
+
+    GridJSON --> Calc
+    GridJSON --> Pages
+    ProbeSummary --> Pages
+    CSV --> Pages
+```
+
 ## Where is the AI?
 
 This repository includes a small-first router classifier implementation in:
