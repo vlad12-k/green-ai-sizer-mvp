@@ -11,11 +11,32 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout base repository workflow files
         uses: actions/checkout@v4
+        if: github.event_name == 'pull_request_target'
+        with:
+          fetch-depth: 0
+
+      - name: Checkout pull request head for data only
+        uses: actions/checkout@v4
+        if: github.event_name == 'pull_request_target'
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          path: pr-head
+
+      - name: Copy trusted calculator and untrusted data snapshot
+        if: github.event_name == 'pull_request_target'
+        run: |
+          mkdir -p data workbook
+          cp pr-head/data/scenario-baseline-improved.csv data/scenario-baseline-improved.csv
+
+      - name: Checkout current ref
+        uses: actions/checkout@v4
+        if: github.event_name != 'pull_request_target'
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
