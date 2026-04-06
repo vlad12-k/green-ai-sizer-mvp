@@ -27,7 +27,7 @@ Why: scheduled automation now updates `automation/refresh-grid-intensity`, opens
 In **Settings → General → Pull Requests**:
 - Enable **Allow auto-merge**.
 
-Why: the refresh workflow calls `gh pr merge --auto --squash` so merges remain autonomous even when direct push to `main` is forbidden.
+Why: the refresh workflow calls `gh pr merge --auto --squash` so merges remain autonomous through branch → PR → auto-merge when direct pushes to `main` are forbidden.
 
 ## Refresh automation flow (GH013-safe)
 The workflow `.github/workflows/refresh-grid-intensity.yml` runs only on `schedule` and `workflow_dispatch` and performs:
