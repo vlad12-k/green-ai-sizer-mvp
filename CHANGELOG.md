@@ -1,13 +1,21 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## [0.2.0] - 2026-09-15
 
-## [1.0.0] - 2026-04-06
+- Canonical grid forecast drives both carbon gate and dashboard; freshness,
+  snapshot agreement and dashboard mirrors are validated.
+- Unified local/release verification and required release-validation merge gate.
+- Explainable Router v2, conservative fallback and separate synthetic evaluation.
+- Validated optional Azure deployment and one PR-based evidence publication path.
+- Audited BSL 1.1 migration with preserved MIT rights and third-party notices.
+- Product documentation distinguishes implemented features, simulation and roadmap.
 
-### Added
-- CI **Carbon Budget Gate** workflow enforcing `python workbook/calc_co2e.py 200` on pull requests and main pushes.
-- Evidence-driven GitHub Pages dashboard consuming committed files from `docs/evidence/`.
-- Daily UK grid-intensity refresh automation that updates evidence via PR + auto-merge using `GH_BOT_TOKEN`.
-- Test and smoke-check validation via `make check`.
-- Governance and operations documentation under `docs/governance/` and `docs/ops/`.
+## [0.1.1] - 2026-04-06
 
+Evidence dashboard, grid refresh automation, governance documentation and checks.
+Corrects the previous changelog heading `1.0.0`, which did not correspond to a
+published release. The existing v0.1.1 tag and release remain unchanged.
+
+## [0.1.0] - 2026-02-27
+
+Initial evidence scaffolding and Carbon Budget Gate portfolio release, under MIT.

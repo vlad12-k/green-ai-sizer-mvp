@@ -1,12 +1,17 @@
 {
   "name": "green-ai-sizer-mvp",
   "image": "mcr.microsoft.com/devcontainers/python:3.11",
-  "postCreateCommand": "python -V && pip -V",
+  "postCreateCommand": "python -m pip install -r app/requirements.txt",
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python"
       ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
     }
   }
 }

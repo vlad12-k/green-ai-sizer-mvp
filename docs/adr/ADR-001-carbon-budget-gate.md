@@ -35,3 +35,8 @@ Workflow: `.github/workflows/carbon-budget.yml`
 
 - **No gate (documentation only):** rejected — no enforcement; estimates can drift.
 - **Separate monitoring service:** rejected — adds cost and complexity; not required at this stage.
+
+## v0.2.0 amendment
+
+The canonical grid summary mean overrides the historical CSV grid assumption.
+Release validation additionally checks snapshot agreement, mirrors and freshness.

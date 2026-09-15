@@ -1,6 +1,6 @@
 # KPI Definitions
 
-These KPIs define how the product monitors carbon performance, routing efficiency, and service responsiveness across governance reviews.
+Current evidence covers estimated carbon scenarios and historical simulated routing/cache/latency. Production telemetry is future work.
 
 ## Core KPIs
 - **gCO₂e / 1,000 requests**
@@ -11,8 +11,10 @@ These KPIs define how the product monitors carbon performance, routing efficienc
   - small_routed / (small_routed + large_routed)
 - **p95 latency (ms)**
   - 95th percentile response time from test logs
+
+## Planned production KPIs (not implemented)
 - **Monthly CO₂e trend**
-  - from workbook using measured traffic + CI scenarios
+  - requires measured traffic and versioned scenarios
 - **AI call rate per feature/team**
   - requests grouped by `feature` tag (used to detect rebound)
 

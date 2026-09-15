@@ -9,8 +9,8 @@ This repository is maintained as a **governance-first evidence pack**: changes m
 ## 1) Development workflow (branches & PRs)
 
 ### Branch model
-- Default development happens on `dev`.
-- Use short-lived branches from `dev` for focused changes:
+- Default development starts from current green `main`.
+- Use short-lived branches from `main` for focused changes:
   - `docs/...`, `ci/...`, `feat/...`, `fix/...`
 
 ### Pull requests
@@ -26,6 +26,7 @@ Prefer **Squash and merge** for small changes (keeps history clean), unless a PR
 ## 2) Required checks (quality gate)
 
 Before merge, the following must pass:
+- **Release Validation** (`make verify-release`)
 - **Carbon Budget Gate** (CO₂e budget enforcement)
 - **CodeQL** (code scanning), if enabled
 
