@@ -39,14 +39,14 @@ function parseCSV(text) {
   });
 }
 
-function calcRow(row) {
+function calcRow(row, grid) {
   const rpd = Number(row.requests_per_day);
   const cacheHit = Number(row.cache_hit_rate);
   const smallRate = Number(row.small_route_rate);
   const whSmall = Number(row.wh_small);
   const whLarge = Number(row.wh_large);
-  const ci = Number(row.grid_intensity_g_per_kwh);
-  if (![rpd, cacheHit, smallRate, whSmall, whLarge, ci].every(Number.isFinite) || rpd <= 0) {
+  const ci = Number(grid.avg_g_per_kwh);
+  if (![rpd, cacheHit, smallRate, whSmall, whLarge, ci].every(Number.isFinite) || rpd <= 0 || cacheHit < 0 || cacheHit > 1 || smallRate < 0 || smallRate > 1 || whSmall < 0 || whLarge < 0 || ci < 0) {
     throw new Error('Malformed scenario row');
   }
   const computed = rpd * (1 - cacheHit);
@@ -228,8 +228,8 @@ async function loadDashboard() {
     const improved = rows.find(r => (r.scenario || '').toLowerCase() === 'improved');
     if (!baseline || !improved) throw new Error('Scenario CSV missing baseline/improved rows');
 
-    const baselineG = calcRow(baseline);
-    const improvedG = calcRow(improved);
+    const baselineG = calcRow(baseline, grid);
+    const improvedG = calcRow(improved, grid);
     const reduction = baselineG > 0 ? ((1 - improvedG / baselineG) * 100) : NaN;
 
     setText('val-baseline', `${fmt(baselineG, 2)} g`);
@@ -255,6 +255,12 @@ async function loadDashboard() {
     renderBarChart('chart-carbon', ['Baseline', 'Improved'], [baselineG, improvedG], 'g');
     renderBarChart('chart-grid', ['Min', 'Avg', 'Max'], [gridMin, gridAvg, gridMax], '');
 
+    const age = Date.now() - Date.parse(grid.generated_utc);
+    if (!Number.isFinite(age) || age < -300000) throw new Error('Invalid grid timestamp');
+    if (age > 48 * 3600000) {
+      updateState('state-warn', 'Historical evidence — grid snapshot older than 48 hours');
+      return;
+    }
     const hasPartial = !Number.isFinite(p95);
     updateState(hasPartial ? 'state-warn' : 'state-ok', hasPartial ? 'Loaded with partial metrics' : 'Loaded');
   } catch (err) {

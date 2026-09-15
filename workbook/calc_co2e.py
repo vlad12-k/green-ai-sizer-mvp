@@ -1,9 +1,11 @@
 import csv
+import math
+from evidence import load_grid
 import os
 import sys
 from typing import Dict, Tuple
 
-BUDGET_G_PER_1K = float(sys.argv[1]) if len(sys.argv) > 1 else 200.0  # default budget
+BUDGET_G_PER_1K = 200.0
 
 
 REQUIRED_FIELDS = [
@@ -19,7 +21,10 @@ REQUIRED_FIELDS = [
 
 def _to_float(row: Dict[str, str], key: str) -> float:
     try:
-        return float(row[key])
+        value = float(row[key])
+        if not math.isfinite(value):
+            raise ValueError("Non-finite value")
+        return value
     except (KeyError, ValueError) as e:
         raise ValueError(f"Invalid or missing numeric field '{key}' in row: {row}") from e
 
@@ -75,6 +80,12 @@ def write_step_summary(lines: str) -> None:
 
 
 def main() -> None:
+    global BUDGET_G_PER_1K
+    BUDGET_G_PER_1K = float(sys.argv[1]) if len(sys.argv) > 1 else 200.0
+    if not math.isfinite(BUDGET_G_PER_1K) or BUDGET_G_PER_1K < 0:
+        raise ValueError("Budget must be finite and nonnegative")
+    grid = load_grid()
+    print(f"Grid source: canonical forecast snapshot, generated {grid['generated_utc']}; intensity={grid['avg_g_per_kwh']}")
     path = "data/scenario-baseline-improved.csv"
 
     # Read CSV
@@ -108,6 +119,9 @@ def main() -> None:
             continue
 
         try:
+            row["grid_intensity_g_per_kwh"] = grid["avg_g_per_kwh"]
+            if scenario in results:
+                raise ValueError(f"Duplicate scenario: {scenario}")
             g_per_1k, g_total = calc_row(row)
         except ValueError as e:
             print(f"ERROR: {e}")
