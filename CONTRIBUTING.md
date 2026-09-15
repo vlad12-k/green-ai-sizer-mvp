@@ -103,3 +103,11 @@ A change is “done” when:
 - Changes intended for a release should be recorded in `CHANGELOG.md` under **[Unreleased]**.
 - Tag releases using Semantic Versioning (e.g., `v0.2.0`).
 - Release notes should summarise user-visible changes and verification steps.
+
+## Language and licensing
+
+All repository-facing content must be professional English, including code,
+comments, UI, documentation, workflows, configuration, commits, PRs and issues.
+Before merging contributions into BSL-covered work, verify authorship and
+explicit licensing permission. Submission alone is not an assignment of rights.
+Preserve third-party licenses and notices; see THIRD_PARTY_NOTICES.md.

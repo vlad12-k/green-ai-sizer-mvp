@@ -121,4 +121,4 @@ The AI contribution here is routing governance for inference demand (small-first
 
 ## License
 
-[MIT](LICENSE)
+[Business Source License 1.1](LICENSE) for v0.2.0+; non-production use is permitted, with no Additional Use Grant. Each covered version changes to GPL-3.0-or-later after four years. Earlier MIT grants remain valid. See [third-party notices](THIRD_PARTY_NOTICES.md) and [provenance audit](docs/license-provenance.md).

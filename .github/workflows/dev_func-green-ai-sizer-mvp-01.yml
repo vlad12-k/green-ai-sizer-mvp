@@ -45,6 +45,11 @@ jobs:
           python -m pip install -r "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/requirements.txt" \
             --target="${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/.python_packages/lib/site-packages"
 
+      - name: Include project license and third-party notices
+        run: |
+          cp LICENSE THIRD_PARTY_NOTICES.md app/
+          cp -R licenses app/licenses
+
       - name: Zip artifact for deployment (only app/)
         run: |
           cd "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
