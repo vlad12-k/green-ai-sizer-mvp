@@ -40,6 +40,9 @@ function parseCSV(text) {
 }
 
 function calcRow(row, grid) {
+  for (const field of ['requests_per_day', 'cache_hit_rate', 'small_route_rate', 'wh_small', 'wh_large']) {
+    if (row[field] === null || row[field] === undefined || String(row[field]).trim() === '') throw new Error('Missing scenario value');
+  }
   const rpd = Number(row.requests_per_day);
   const cacheHit = Number(row.cache_hit_rate);
   const smallRate = Number(row.small_route_rate);
@@ -126,7 +129,7 @@ function setupTabs() {
 
 function setLastUpdated(grid) {
   if (grid && grid.generated_utc) {
-    setText('last-updated-text', `Last updated: ${new Date(grid.generated_utc).toUTCString()} (from docs/evidence/grid_intensity_uk_summary.json)`);
+    setText('last-updated-text', `Grid forecast updated: ${new Date(grid.generated_utc).toUTCString()} · historical probe updated separately`);
   } else {
     setText('last-updated-text', 'Last updated: unavailable in summary JSON');
   }
@@ -222,6 +225,11 @@ async function loadDashboard() {
   try {
     if (!grid || typeof grid !== 'object') throw new Error('Grid summary malformed');
     if (!probe || typeof probe !== 'object') throw new Error('Probe summary malformed');
+    const gridValues = [grid.min_g_per_kwh, grid.avg_g_per_kwh, grid.max_g_per_kwh];
+    if (!gridValues.every(v => typeof v === 'number' && Number.isFinite(v) && v >= 0) || gridValues[0] > gridValues[1] || gridValues[1] > gridValues[2]) throw new Error('Invalid grid summary');
+    for (const key of ['cache_hit_rate_observed', 'small_route_rate_observed']) {
+      if (typeof probe[key] !== 'number' || !Number.isFinite(probe[key]) || probe[key] < 0 || probe[key] > 1) throw new Error('Invalid probe rate');
+    }
 
     const rows = parseCSV(csvText);
     const baseline = rows.find(r => (r.scenario || '').toLowerCase() === 'baseline');
@@ -238,10 +246,10 @@ async function loadDashboard() {
 
     setText('val-cache', pct(Number(probe.cache_hit_rate_observed)));
     setText('val-route', pct(Number(probe.small_route_rate_observed)));
-    const avgLatency = Number(probe.avg_latency_ms);
+    const avgLatency = typeof probe.avg_latency_ms === 'number' && probe.avg_latency_ms >= 0 ? probe.avg_latency_ms : NaN;
     setText('val-latency-avg', Number.isFinite(avgLatency) ? `${fmt(avgLatency, 0)} ms` : 'N/A');
 
-    const p95 = Number(probe.p95_latency_ms);
+    const p95 = typeof probe.p95_latency_ms === 'number' && probe.p95_latency_ms >= 0 ? probe.p95_latency_ms : NaN;
     setText('val-latency-p95', Number.isFinite(p95) ? `${fmt(p95, 0)} ms` : 'N/A');
 
     const gridMin = Number(grid.min_g_per_kwh);

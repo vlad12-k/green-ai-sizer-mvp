@@ -1,124 +1,94 @@
-[![Carbon Budget Gate](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/carbon-budget.yml/badge.svg)](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/carbon-budget.yml)
-[![Refresh UK grid intensity snapshot](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/refresh-grid-intensity.yml/badge.svg)](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/refresh-grid-intensity.yml)
+[![Release Validation](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/release-validation.yml/badge.svg)](https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/release-validation.yml)
 
-# Green AI Sizer MVP
+# Green AI Sizer
 
-Green AI Sizer MVP is a lightweight governance and sizing toolkit for teams operating always-on AI services, helping engineering and sustainability stakeholders keep emissions decisions auditable by turning scenario evidence into a visible dashboard, CI budget enforcement, and automated grid-intensity refresh.
+An inference-governance engineering prototype: explainable routing decisions,
+reproducible carbon scenarios, a validated evidence pipeline, and a static
+[governance dashboard](https://vlad12-k.github.io/green-ai-sizer-mvp/).
 
-## What problem it solves
+## Product boundary
 
-AI services run continuously while grid intensity and demand conditions vary; this creates governance risk when emissions controls are not enforced. This project helps teams govern operational emissions under heatwave/grid volatility by making baseline-vs-improved sizing assumptions explicit, measurable, and continuously checked.
+**Implemented:** hybrid policy/ML routing, decision reasons and confidence,
+conservative fallback, synthetic evaluation, canonical grid evidence, carbon
+budget CI, dashboard provenance, and an optional Azure simulation endpoint.
 
-## How it works
+**Simulated:** cache hits, latency and Wh per request. Carbon results are scenario
+estimates using real grid forecast data and assumed energy values. Historical
+probe evidence is not a measurement of LLM energy or answer quality.
 
-1. **Evidence pack**: versioned evidence files are maintained under `docs/evidence/`.
-2. **Dashboard**: GitHub Pages renders KPIs from those evidence files (`docs/index.html` + `docs/app.js`).
-3. **CI Carbon Budget Gate**: pull requests and main pushes run `python workbook/calc_co2e.py 200`.
-4. **Daily grid refresh automation**: scheduled workflow refreshes UK grid evidence and auto-merges automation PRs when checks pass.
+**Future work:** hosted/local LLM providers, real response caching, measured
+quality/cost/latency, workload profiling and production policy enforcement.
+There is no live LLM invocation in this release. This is not a clinical system.
+
+## Run and verify
+
+Use Python 3.11 or 3.12, Node.js 22, and make:
+
+```sh
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r app/requirements.txt
+make verify
+make verify-release
+python -m http.server 8000 --bind 127.0.0.1 --directory docs
+```
+
+Open `http://127.0.0.1:8000`. Offline verification is reproducible without API
+credentials. Release verification additionally rejects grid evidence older than
+48 hours. To refresh it, run `python scripts/fetch_uk_grid_intensity.py`, then
+`python workbook/evidence.py`, and submit the updated evidence as a PR.
 
 ## Architecture
 
-- Evidence is captured and versioned in `docs/evidence/` and source data files under `data/`.
-- The static dashboard (`docs/index.html` + `docs/app.js`) reads committed evidence artifacts and renders governance KPIs.
-- The CI Carbon Budget Gate (`.github/workflows/carbon-budget.yml`) enforces the CO₂e threshold on pull requests and `main`.
-- Daily refresh automation (`.github/workflows/refresh-grid-intensity.yml`) updates grid evidence and opens/updates the automation PR.
-- After checks pass, the refresh PR auto-merges to `main`, and GitHub Pages serves the updated evidence-backed dashboard.
-
-Architecture document: [docs/architecture/system-architecture.md](docs/architecture/system-architecture.md)
-
 ```mermaid
-flowchart TD
-    subgraph CI ["CI / GitHub Actions"]
-        CIGate["Carbon Budget Gate\n(.github/workflows/carbon-budget.yml)"]
-        Calc["calc_co2e.py\n(workbook/)"]
-        CSV["scenario-baseline-improved.csv\n(data/)"]
-        CIGate --> Calc --> CSV
-        Calc --> Pass{"PASS / FAIL"}
-        Pass -->|PASS| Merge["Merge to main"]
-        Pass -->|FAIL| Block["Block merge"]
-    end
-
-    subgraph DataRefresh ["Grid data refresh (scheduled)"]
-        GridAPI["NESO Carbon Intensity API\n(public, no key)"]
-        FetchScript["fetch_uk_grid_intensity.py\n(scripts/)"]
-        GridCSV["data/grid_intensity_uk_snapshot.csv"]
-        GridJSON["data/grid_intensity_uk_summary.json"]
-        GridAPI -->|Daily via Actions| FetchScript
-        FetchScript --> GridCSV
-        FetchScript --> GridJSON
-    end
-
-    subgraph Endpoint ["Optional live endpoint"]
-        AzFunc["Azure Function\n(app/orchestrator)"]
-        ProbeScript["probe_endpoint.py\n(scripts/)"]
-        ProbeSummary["probe_run_summary.json\n(scripts/)"]
-        AzFunc -->|HTTP probe| ProbeScript
-        ProbeScript --> ProbeSummary
-    end
-
-    subgraph Dashboard ["Static monitoring dashboard"]
-        Pages["docs/index.html\n(GitHub Pages)"]
-    end
-
-    GridJSON --> Calc
-    GridJSON --> Pages
-    ProbeSummary --> Pages
-    CSV --> Pages
+flowchart LR
+  A[NESO forecast] --> B[Snapshot and validated summary]
+  B --> C[Carbon engine]
+  D[Scenario assumptions] --> C
+  C --> E[Carbon and release gates]
+  B --> F[Published evidence mirrors]
+  D --> F
+  F --> G[Dashboard]
+  H[Request] --> I[Policy and ML router]
+  I --> J[Small / large simulation or reject]
+  J --> K[Explicit simulation telemetry]
 ```
 
-## Where is the AI?
+The engine and dashboard use the same canonical grid mean. Source/mirror drift,
+invalid numeric inputs and stale release evidence fail validation. Daily refresh
+opens a PR; there is no second writer pushing mirror commits directly to main.
 
-This repository includes a small-first router classifier implementation in:
+## Router v2
 
-- `app/ml/router.py`
-- `app/ml/router_model.joblib`
-- `app/ml/train_router.py`
+`app/ml/router.py` returns route, reason, policy overrides, router version and
+confidence. Confidence is an uncalibrated classifier probability, not answer
+quality. A separate evaluation fixture records failures and conservative fallback.
+See the [model card](docs/router-model-card.md) and
+[evaluation report](docs/evidence/router_evaluation.json).
 
-The AI contribution here is routing governance for inference demand (small-first behavior), with evidence and controls around emissions outcomes.
+## Engineering workflow
 
-## Live proof
+Use short-lived branches from `main`, with one phase per PR. Review the final
+diff, run `make verify-release`, and require green CI and CodeQL on the reviewed
+SHA before merging. `carbon-budget` and `release-validation` are required checks.
+[Azure deployment](docs/ops/azure-deployment.md) is optional, manually dispatched
+from main and validates its exact commit before packaging.
 
-- **Dashboard (GitHub Pages):** https://vlad12-k.github.io/green-ai-sizer-mvp/
-- **Evidence (GitHub Pages):**
-  - https://vlad12-k.github.io/green-ai-sizer-mvp/evidence/grid_intensity_uk_summary.json
-  - https://vlad12-k.github.io/green-ai-sizer-mvp/evidence/probe_run_summary.json
-  - https://vlad12-k.github.io/green-ai-sizer-mvp/evidence/scenario-baseline-improved.csv
-- **Workflows:**
-  - Refresh grid intensity: https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/refresh-grid-intensity.yml
-  - Carbon Budget Gate: https://github.com/vlad12-k/green-ai-sizer-mvp/actions/workflows/carbon-budget.yml
+## Documentation
 
-## Automation proof (what to screenshot for report)
+- [Architecture](docs/architecture/system-architecture.md)
+- [Data contract](docs/dashboard-data-contract.md) and [sources](docs/evidence/data-sources.md)
+- [Verification](docs/ops/verification.md) and [release gates](RELEASE.md)
+- [System boundary](docs/governance/system-boundary.md), [risk register](docs/governance/risk-register.md)
+- [Migration map](MIGRATION.md) and [changelog](CHANGELOG.md)
 
-- A successful run of `refresh-grid-intensity.yml` in Actions.
-- The automation PR (`data: refresh UK grid intensity snapshot (auto)`) created and merged.
-- Dashboard showing updated **Last updated** timestamp.
-
-## Verification (3 steps)
-
-1. Run `make check`
-2. Run `python workbook/calc_co2e.py 200`
-3. Open dashboard and confirm **Last updated** matches `docs/evidence/grid_intensity_uk_summary.json` `generated_utc`
-
-## Security & governance
-
-- Configure repository secret `GH_BOT_TOKEN` (fine-grained PAT) for refresh automation checkout/push/PR operations; never store token values in code or docs.
-- Operations setup: `docs/ops/github-actions.md`
-- Governance controls and operating docs: `docs/governance/`
-- Evidence pack and provenance: `docs/evidence/`
-
-## Limitations / Non-goals
-
-- Static GitHub Pages dashboard (not realtime streaming).
-- Operational emissions proxy focus (not embodied carbon accounting).
-- Evidence-driven frontend (no external APIs called at page load).
-
-## Documentation map
-
-- Architecture: `docs/architecture/system-architecture.md`
-- Operations: `docs/ops/`
-- Governance: `docs/governance/`
-- Evidence: `docs/evidence/`
+The project originated as student work. Historical attribution and releases are
+preserved; current claims are limited to the implemented and verified behavior.
 
 ## License
 
-[Business Source License 1.1](LICENSE) for v0.2.0+; non-production use is permitted, with no Additional Use Grant. Each covered version changes to GPL-3.0-or-later after four years. Earlier MIT grants remain valid. See [third-party notices](THIRD_PARTY_NOTICES.md) and [provenance audit](docs/license-provenance.md).
+[Business Source License 1.1](LICENSE) for covered v0.2.0+ work. Non-production
+use is permitted; Additional Use Grant is None. Each covered version changes to
+GPL-3.0-or-later after four years. Prior MIT grants remain valid. External data,
+dependencies and retained scaffolding keep their own terms: see
+[notices](THIRD_PARTY_NOTICES.md) and [provenance audit](docs/license-provenance.md).

@@ -1,28 +1,18 @@
-# Release guide
+# Release procedure
 
-## Versioning
+1. Complete each scoped PR with final diff review and `make verify-release`.
+2. Require successful Carbon Budget Gate, Release Validation, docs checks and
+   CodeQL for the reviewed PR head. Do not bypass a failing check.
+3. Merge to main and wait for post-merge CI/CodeQL and Pages deployment.
+4. Verify desktop/mobile dashboard, tabs, evidence values and console health.
+5. Check license provenance, third-party notices, changelog and release scope.
+6. Record the final main SHA. Create the version tag on that exact SHA only.
+7. Publish release notes with changes, verification and material limitations.
+8. Verify tag → SHA, published status and Latest. Preserve historical releases.
 
-This project follows **Semantic Versioning (SemVer)**:
+For each BSL-covered version, record its first public distribution date and
+Change Date no later than its fourth anniversary. Do not restart the clock by
+retagging or republishing the same version. Earlier MIT grants remain valid.
 
-- **MAJOR**: incompatible changes
-- **MINOR**: backward-compatible feature additions
-- **PATCH**: backward-compatible fixes and documentation/process improvements
-
-## Release checklist
-
-- [ ] `make check` passes
-- [ ] `python workbook/calc_co2e.py 200` passes
-- [ ] Carbon Budget Gate workflow is green
-- [ ] Refresh grid-intensity workflow is green
-- [ ] Dashboard loads on GitHub Pages
-- [ ] `Last updated` in dashboard reflects fresh `generated_utc` from `docs/evidence/grid_intensity_uk_summary.json`
-- [ ] Latest refresh automation PR was created and merged successfully
-
-## Automation proof artifacts
-
-A release should be backed by three observable artifacts:
-
-1. **GitHub Actions run**: successful `refresh-grid-intensity.yml` execution.
-2. **Merged automation PR**: `data: refresh UK grid intensity snapshot (auto)` merged to `main`.
-3. **Updated evidence**: refreshed timestamp/values in `docs/evidence/grid_intensity_uk_summary.json` visible on GitHub Pages dashboard.
-
+Optional Azure deployment is a separate operator action. A software release
+must not claim endpoint health or real LLM inference without direct evidence.

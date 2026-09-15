@@ -4,7 +4,7 @@ This document defines required repository settings for fully automated daily gri
 
 ## Workflows covered
 - `.github/workflows/refresh-grid-intensity.yml`
-- `.github/workflows/sync-dashboard-evidence.yml`
+- `.github/workflows/release-validation.yml`
 - `.github/workflows/docs-check.yml`
 - `.github/workflows/carbon-budget.yml`
 
@@ -12,14 +12,14 @@ This document defines required repository settings for fully automated daily gri
 
 ### 1) Actions permissions
 In **Settings → Actions → General**:
-- **Workflow permissions:** `Read and write permissions`
+- **Workflow permissions:** prefer read-only defaults; the refresh job explicitly requests its required write permissions.
 
 Why: the refresh workflow needs to push to an automation branch and create/update pull requests.
 
 ### 2) Branch protection for `main`
 In **Settings → Branches**:
 - Keep `main` protected by rulesets that require pull requests (GH013).
-- Keep required checks on PRs to `main` (including `carbon-budget`).
+- Keep required checks on PRs to `main` (including `carbon-budget` and `release-validation`).
 
 Why: scheduled automation now updates `automation/refresh-grid-intensity`, opens/updates a PR to `main`, and uses auto-merge squash once required checks pass. `carbon-budget` remains on `pull_request` + `push` to `main` (safe default), and should not be switched to `pull_request_target`.
 
@@ -41,7 +41,7 @@ Why: the refresh workflow calls `gh pr merge --auto --squash` so merges remain a
 ## Refresh automation flow (GH013-safe)
 The workflow `.github/workflows/refresh-grid-intensity.yml` runs only on `schedule` and `workflow_dispatch` and performs:
 1. Checkout `main`, set up Python 3.11, and run `python scripts/fetch_uk_grid_intensity.py`.
-2. Ensure canonical outputs are present and copy summary JSON to `docs/evidence/`.
+2. Validate canonical outputs, publish all mirrors, and check freshness and carbon budget.
 3. Exit cleanly when no tracked files changed.
 4. When changed, commit on `automation/refresh-grid-intensity` with bot identity and push that branch.
 5. Create or update a PR to `main` with generated UTC and min/avg/max gCO2/kWh from `data/grid_intensity_uk_summary.json`.

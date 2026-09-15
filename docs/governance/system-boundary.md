@@ -1,39 +1,19 @@
-# System Boundary
+# System boundary
 
-This emissions method covers operational emissions for:
+The carbon engine estimates scenario emissions from assumed request volumes,
+cache/routing rates, energy per route and the canonical UK grid forecast mean.
+It does not measure the energy of a running LLM or the Azure Function.
 
-- Inference orchestration (routing and fallback logic)
-- Caching (response / semantic cache)
-- Logging and metrics needed to compute KPIs
-- Network overhead (simplified; treated as negligible at MVP scope)
+The scenario assumes 0.2 Wh per small request and 2.0 Wh per large request.
+Cached requests contribute zero energy in the workbook model; the optional
+runtime uses a separate simulated 0.02 Wh cache value. These models must not be
+presented as equivalent measured telemetry. Historical probe rates remain
+scenario inputs, not evidence of Router v2 production behavior.
 
-## Exclusions (what is NOT included)
+Excluded: embodied emissions, device energy, network and logging overhead,
+provider-specific hardware utilization, data-centre PUE, and Azure overhead.
+The resulting estimate is incomplete; no precise real-world savings are claimed.
 
-- End-user device energy use
-- Embodied emissions of hardware (manufacture and disposal)
-- Full data centre PUE modelling (deferred to a future iteration)
-- Azure infrastructure overhead beyond the Function App
-
-## Core assumptions (current values — sourced from evidence files)
-
-| Parameter | Value | Source |
-|---|---|---|
-| Requests per day (baseline + improved) | 1,000 | `data/scenario-baseline-improved.csv` |
-| Cache hit rate (baseline) | 0 % | `data/scenario-baseline-improved.csv` |
-| Cache hit rate (improved) | 31 % | `scripts/probe_run_summary.json` → CSV |
-| Small route rate (baseline) | 0 % | `data/scenario-baseline-improved.csv` |
-| Small route rate (improved) | 60 % | `scripts/probe_run_summary.json` → CSV |
-| Energy per small request (Wh) | 0.2 | `data/scenario-baseline-improved.csv` |
-| Energy per large request (Wh) | 2.0 | `data/scenario-baseline-improved.csv` |
-| Grid carbon intensity (gCO₂/kWh) | 79.85 (avg, UK national grid) | `data/grid_intensity_uk_summary.json` |
-
-## Sensitivity
-
-The grid intensity input can be varied between min (40.0 gCO₂/kWh) and max (135.0 gCO₂/kWh) — see `data/grid_intensity_uk_summary.json` — to assess best-case and worst-case CO₂e outcomes. The CI gate uses the average value for the pass/fail decision.
-
-## Limitations
-
-- Grid intensity represents the UK national grid mix at snapshot time; it is not marginal emissions.
-- Forecast intensity is used for consistency with the NESO API output.
-- Wh-per-request values are estimates based on small/large model routing ratios; they are not measured from hardware telemetry.
-- PUE is not applied; results are conservative (understated) relative to real-world data centre overhead.
+Use the current snapshot minimum/maximum to explore grid sensitivity separately.
+The release gate always uses the canonical mean. Explicit sensitivity-analysis
+rows and production-calibrated energy measurements remain future work.
