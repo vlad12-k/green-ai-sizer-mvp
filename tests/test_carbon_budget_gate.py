@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 import tempfile
 import unittest
@@ -17,7 +18,7 @@ class CarbonBudgetGateOutputTests(unittest.TestCase):
         env["GITHUB_STEP_SUMMARY"] = summary_path
 
         proc = subprocess.run(
-            ["python", "workbook/calc_co2e.py", "999999"],
+            [sys.executable, "workbook/calc_co2e.py", "999999"],
             cwd=self.repo_root,
             env=env,
             text=True,

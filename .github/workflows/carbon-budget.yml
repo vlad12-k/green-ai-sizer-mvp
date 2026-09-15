@@ -17,6 +17,12 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Verify fresh canonical evidence and mirrors
+        run: python workbook/evidence.py --check --fresh
+
+      - name: Test carbon and dashboard contracts
+        run: python -m unittest discover -s tests
+
       - name: Run CO2e budget check
         run: |
           python workbook/calc_co2e.py 200

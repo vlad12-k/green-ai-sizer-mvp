@@ -41,10 +41,8 @@ jobs:
 
       - name: Sync dashboard evidence mirror
         run: |
-          cp data/grid_intensity_uk_summary.json docs/evidence/grid_intensity_uk_summary.json
-          if [ -f data/grid_intensity_uk_snapshot.csv ]; then
-            cp data/grid_intensity_uk_snapshot.csv docs/evidence/grid_intensity_uk_snapshot.csv
-          fi
+          python workbook/evidence.py
+          python workbook/evidence.py --check --fresh
 
       - name: Commit changes and open/update PR
         env:
