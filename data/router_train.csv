@@ -1,0 +1,41 @@
+text,label,source
+Define inference latency,small,Project-authored synthetic example; not a production benchmark
+What is a cache hit,small,Project-authored synthetic example; not a production benchmark
+Give a short summary of this note,small,Project-authored synthetic example; not a production benchmark
+Explain the meaning of throughput,small,Project-authored synthetic example; not a production benchmark
+List the days of the week,small,Project-authored synthetic example; not a production benchmark
+Return the count of these words,small,Project-authored synthetic example; not a production benchmark
+Translate hello to French,small,Project-authored synthetic example; not a production benchmark
+Sort these five numbers,small,Project-authored synthetic example; not a production benchmark
+Extract the names from this sentence,small,Project-authored synthetic example; not a production benchmark
+Convert two hours into minutes,small,Project-authored synthetic example; not a production benchmark
+Return this text in uppercase,small,Project-authored synthetic example; not a production benchmark
+Identify the date in this line,small,Project-authored synthetic example; not a production benchmark
+Name the capital of Spain,small,Project-authored synthetic example; not a production benchmark
+Format this list as JSON,small,Project-authored synthetic example; not a production benchmark
+Rewrite this sentence with correct punctuation,small,Project-authored synthetic example; not a production benchmark
+Find the largest number in this list,small,Project-authored synthetic example; not a production benchmark
+Expand the acronym CPU,small,Project-authored synthetic example; not a production benchmark
+Count characters in this string,small,Project-authored synthetic example; not a production benchmark
+Retrieve the status of this job,small,Project-authored synthetic example; not a production benchmark
+Summarise this short release note,small,Project-authored synthetic example; not a production benchmark
+Design a multi region inference service,large,Project-authored synthetic example; not a production benchmark
+Compare routing strategies under uncertain load,large,Project-authored synthetic example; not a production benchmark
+Evaluate a provider migration plan,large,Project-authored synthetic example; not a production benchmark
+Propose a roadmap for model governance,large,Project-authored synthetic example; not a production benchmark
+Investigate conflicting signals during an outage,large,Project-authored synthetic example; not a production benchmark
+Plan incident response for leaked credentials,large,Project-authored synthetic example; not a production benchmark
+Analyze the trade offs of caching private prompts,large,Project-authored synthetic example; not a production benchmark
+Develop a policy for sensitive workload placement,large,Project-authored synthetic example; not a production benchmark
+Assess cascading failures across services,large,Project-authored synthetic example; not a production benchmark
+Prioritize mitigation actions with budget constraints,large,Project-authored synthetic example; not a production benchmark
+Build a detailed capacity forecast from partial evidence,large,Project-authored synthetic example; not a production benchmark
+Reconcile contradictory cost and reliability targets,large,Project-authored synthetic example; not a production benchmark
+Critically review a distributed system architecture,large,Project-authored synthetic example; not a production benchmark
+Explain interactions between queueing and backpressure,large,Project-authored synthetic example; not a production benchmark
+Plan a staged database migration with rollback,large,Project-authored synthetic example; not a production benchmark
+Diagnose intermittent failures across three services,large,Project-authored synthetic example; not a production benchmark
+Evaluate model drift against production requirements,large,Project-authored synthetic example; not a production benchmark
+Construct a threat model for an inference gateway,large,Project-authored synthetic example; not a production benchmark
+Compare data residency requirements across providers,large,Project-authored synthetic example; not a production benchmark
+Design an experiment to measure answer quality,large,Project-authored synthetic example; not a production benchmark

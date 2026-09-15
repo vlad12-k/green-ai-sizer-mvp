@@ -1,0 +1,21 @@
+text,label,source
+What is tokenization,small,Project-authored synthetic example; not a production benchmark
+Define availability,small,Project-authored synthetic example; not a production benchmark
+Give a short summary of this changelog,small,Project-authored synthetic example; not a production benchmark
+What is the meaning of a cold start,small,Project-authored synthetic example; not a production benchmark
+Summarise a short weather bulletin,small,Project-authored synthetic example; not a production benchmark
+Define memory bandwidth,small,Project-authored synthetic example; not a production benchmark
+Alphabetize these four names,small,Project-authored synthetic example; not a production benchmark
+Convert ten kilograms to grams,small,Project-authored synthetic example; not a production benchmark
+Extract all email domains from this line,small,Project-authored synthetic example; not a production benchmark
+Count the commas in this sentence,small,Project-authored synthetic example; not a production benchmark
+Compare batch and streaming inference,large,Project-authored synthetic example; not a production benchmark
+Evaluate a recovery plan for regional failure,large,Project-authored synthetic example; not a production benchmark
+Design a privacy policy for cached outputs,large,Project-authored synthetic example; not a production benchmark
+Plan emergency escalation after a data leak,large,Project-authored synthetic example; not a production benchmark
+Create a roadmap for workload placement,large,Project-authored synthetic example; not a production benchmark
+Diagnose inconsistent responses after deployment,large,Project-authored synthetic example; not a production benchmark
+Resolve competing reliability and cost objectives,large,Project-authored synthetic example; not a production benchmark
+Investigate performance collapse under burst traffic,large,Project-authored synthetic example; not a production benchmark
+Assess migration risks for a legacy application,large,Project-authored synthetic example; not a production benchmark
+Propose a multi stage capacity management strategy,large,Project-authored synthetic example; not a production benchmark
