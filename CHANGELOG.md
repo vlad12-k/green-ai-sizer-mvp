@@ -9,6 +9,7 @@
 - Validated optional Azure deployment and one PR-based evidence publication path.
 - Audited BSL 1.1 migration with preserved MIT rights and third-party notices.
 - Product documentation distinguishes implemented features, simulation and roadmap.
+- Obsolete academic migration mapping, training fixture and duplicated grid input removed.
 
 ## [0.1.1] - 2026-04-06
 

@@ -15,7 +15,6 @@ REQUIRED_FIELDS = [
     "small_route_rate",
     "wh_small",
     "wh_large",
-    "grid_intensity_g_per_kwh",
 ]
 
 
