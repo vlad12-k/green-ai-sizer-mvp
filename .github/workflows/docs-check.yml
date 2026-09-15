@@ -64,7 +64,7 @@ jobs:
 
           required = [
               "scenario", "requests_per_day", "cache_hit_rate", "small_route_rate",
-              "wh_small", "wh_large", "grid_intensity_g_per_kwh"
+              "wh_small", "wh_large"
           ]
           path = "data/scenario-baseline-improved.csv"
 

@@ -25,7 +25,7 @@ class EvidenceContractTests(unittest.TestCase):
     def test_summary_must_match_snapshot(self):
         path = self.root / 'data/grid_intensity_uk_summary.json'
         data = json.loads(path.read_text())
-        data['avg_g_per_kwh'] = 79.85
+        data['avg_g_per_kwh'] = 70.00
         path.write_text(json.dumps(data))
         with self.assertRaisesRegex(ValueError, 'does not match'):
             load_grid(self.root)

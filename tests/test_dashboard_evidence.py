@@ -38,7 +38,6 @@ class DashboardEvidenceTests(unittest.TestCase):
             "small_route_rate",
             "wh_small",
             "wh_large",
-            "grid_intensity_g_per_kwh",
         }
         self.assertTrue(required_headers.issubset(set(rows[0].keys())))
 

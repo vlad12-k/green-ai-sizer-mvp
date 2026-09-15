@@ -21,8 +21,7 @@ operator intervention. Only the repository-controlled model is loaded with jobli
 ## Data and reproduction
 
 `data/router_train.csv` has 40 authored synthetic examples. `router_eval.csv`
-has 20 separately authored, non-overlapping examples. The previous eight-row
-`route_training.csv` is historical and is not used for training or evaluation.
+has 20 separately authored, non-overlapping examples.
 No real user prompts or third-party text were copied into the new fixtures.
 These small synthetic fixtures check regressions; they cannot establish
 production routing quality, fairness, privacy, or generalization.

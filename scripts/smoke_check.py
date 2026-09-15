@@ -47,7 +47,6 @@ def main() -> None:
         "small_route_rate",
         "wh_small",
         "wh_large",
-        "grid_intensity_g_per_kwh",
     ]
     missing = [h for h in required_headers if h not in rows[0].keys()]
     if missing:

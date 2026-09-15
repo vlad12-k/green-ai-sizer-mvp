@@ -35,7 +35,6 @@ Required header columns:
 - `small_route_rate`
 - `wh_small`
 - `wh_large`
-- `grid_intensity_g_per_kwh`
 
 Required rows:
 - `scenario=baseline`
@@ -56,8 +55,9 @@ Used for:
 `data/grid_intensity_uk_snapshot.csv` is the committed forecast evidence.
 `data/grid_intensity_uk_summary.json` must agree with its point count and rounded
 minimum/mean/maximum. The carbon engine and dashboard both use that mean.
-The CSV scenario intensity is retained as a historical scenario assumption;
-it is not the active grid input. Energy and workload assumptions remain simulated.
+The scenario CSV contains workload and energy assumptions only. Grid intensity
+comes exclusively from the canonical summary. Energy and workload assumptions
+remain simulated.
 
 `python workbook/evidence.py` publishes the canonical scenario, grid summary and
 probe mirrors. `--check` rejects mirror drift without writing; `--fresh` also

@@ -7,8 +7,8 @@ simulation. The product boundary is described in the root README.
 
 NESO forecast API → canonical snapshot CSV → validated summary → carbon engine
 and published dashboard mirrors. Scenario workload/energy assumptions are read
-from `data/scenario-baseline-improved.csv`. Its old grid value is historical;
-both active calculations use `avg_g_per_kwh` from the canonical summary.
+from `data/scenario-baseline-improved.csv`. Both active calculations use
+`avg_g_per_kwh` from the canonical summary.
 
 The carbon formula is computed requests × weighted Wh per request / 1000 ×
 grid intensity, normalized to 1,000 incoming requests. Cached requests are

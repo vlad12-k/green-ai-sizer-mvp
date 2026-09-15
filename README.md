@@ -80,7 +80,7 @@ from main and validates its exact commit before packaging.
 - [Data contract](docs/dashboard-data-contract.md) and [sources](docs/evidence/data-sources.md)
 - [Verification](docs/ops/verification.md) and [release gates](RELEASE.md)
 - [System boundary](docs/governance/system-boundary.md), [risk register](docs/governance/risk-register.md)
-- [Migration map](MIGRATION.md) and [changelog](CHANGELOG.md)
+- [Changelog](CHANGELOG.md) and [release procedure](RELEASE.md)
 
 The project originated as student work. Historical attribution and releases are
 preserved; current claims are limited to the implemented and verified behavior.
