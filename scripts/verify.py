@@ -29,6 +29,7 @@ def main():
     run('node', '--check', 'docs/app.js')
     run(sys.executable, '-m', 'unittest', 'discover', '-s', 'tests')
     run(sys.executable, 'scripts/smoke_check.py')
+    run(sys.executable, 'scripts/evaluate_router.py')
     run(sys.executable, 'workbook/evidence.py', '--check', *(['--fresh'] if args.release else []))
     run(sys.executable, 'workbook/calc_co2e.py', '200')
     print('PASS: release verification' if args.release else 'PASS: offline verification')

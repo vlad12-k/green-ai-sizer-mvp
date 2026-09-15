@@ -1,0 +1,50 @@
+{
+  "dataset_kind": "authored synthetic fixture; not production or answer-quality evidence",
+  "train_count": 40,
+  "evaluation_count": 20,
+  "labels": [
+    "small",
+    "large"
+  ],
+  "threshold": 0.65,
+  "accuracy": 0.85,
+  "classifier_only_accuracy": 1.0,
+  "large_recall": 1.0,
+  "confusion_matrix": [
+    [
+      7,
+      3
+    ],
+    [
+      0,
+      10
+    ]
+  ],
+  "decision_reasons": {
+    "simple_request_policy": 6,
+    "low_confidence_fallback": 7,
+    "ml_prediction": 1,
+    "high_complexity_policy": 6
+  },
+  "failures": [
+    {
+      "text": "Alphabetize these four names",
+      "expected": "small",
+      "actual": "large"
+    },
+    {
+      "text": "Convert ten kilograms to grams",
+      "expected": "small",
+      "actual": "large"
+    },
+    {
+      "text": "Extract all email domains from this line",
+      "expected": "small",
+      "actual": "large"
+    }
+  ],
+  "dataset_sha256": {
+    "router_train.csv": "44d58127a41b1d174b699f1259708b25b66cdb88f9e57e7fa91a7c1d13d238ee",
+    "router_eval.csv": "98a74826cae2fce2d4c7573a927c82c1fe48a68ccbc76ee16d5605e1925eba7f"
+  }
+}

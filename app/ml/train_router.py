@@ -1,46 +1,35 @@
+"""Reproducible training on authored synthetic routing examples only."""
 import csv
 from pathlib import Path
-from sklearn.model_selection import train_test_split
+import joblib
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report
-import joblib
 
-DATA_PATH = Path("data/route_training.csv")
-MODEL_PATH = Path("app/ml/router_model.joblib")
+ROOT = Path(__file__).resolve().parents[2]
+DATA_PATH = ROOT / 'data/router_train.csv'
+MODEL_PATH = ROOT / 'app/ml/router_model.joblib'
 
-def load_data():
-    texts, labels = [], []
-    with DATA_PATH.open(newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            t = (row.get("text") or "").strip()
-            y = (row.get("label") or "").strip()
-            if t and y:
-                texts.append(t)
-                labels.append(y)
-    return texts, labels
 
-def main():
-    X, y = load_data()
-    if len(X) < 20:
-        print(f"WARNING: dataset is small ({len(X)} rows). Add more rows to improve the model.")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y if len(set(y))>1 else None)
+def load_data(path=DATA_PATH):
+    with path.open(newline='', encoding='utf-8') as stream:
+        rows = list(csv.DictReader(stream))
+    if not rows or any(not r['text'].strip() or r['label'] not in ('small', 'large') for r in rows):
+        raise ValueError('Invalid routing dataset')
+    texts = [r['text'].strip() for r in rows]
+    if len(set(t.lower() for t in texts)) != len(texts):
+        raise ValueError('Duplicate routing examples')
+    return texts, [r['label'] for r in rows]
 
-    model = Pipeline([
-        ("tfidf", TfidfVectorizer(ngram_range=(1,2), min_df=1)),
-        ("clf", LogisticRegression(max_iter=1000))
-    ])
 
-    model.fit(X_train, y_train)
-    preds = model.predict(X_test)
+def train():
+    texts, labels = load_data()
+    model = Pipeline([('tfidf', TfidfVectorizer(ngram_range=(1, 2))),
+                      ('clf', LogisticRegression(max_iter=1000, random_state=42))])
+    model.fit(texts, labels)
+    return model
 
-    print(classification_report(y_test, preds))
 
-    MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump(model, MODEL_PATH)
-    print(f"Saved model to: {MODEL_PATH}")
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    joblib.dump(train(), MODEL_PATH)
+    print(f'Saved {MODEL_PATH.name}')
