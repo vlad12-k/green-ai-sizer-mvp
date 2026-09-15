@@ -1,4 +1,5 @@
 import csv
+import math
 import json
 import statistics
 import urllib.request
@@ -26,6 +27,15 @@ def main():
         if ts and intensity is not None:
             points.append((ts, float(intensity)))
 
+    if not points or len(points) != len(rows):
+        raise ValueError('Incomplete grid response; existing evidence preserved')
+    if len({ts for ts, _ in points}) != len(points):
+        raise ValueError('Duplicate grid timestamps')
+    if any(not math.isfinite(v) or v < 0 for _, v in points):
+        raise ValueError('Invalid grid intensity')
+    for ts, _ in points:
+        if datetime.fromisoformat(ts.replace('Z', '+00:00')).tzinfo is None:
+            raise ValueError('Grid timestamps must include a timezone')
     values = [v for _, v in points]
     min_v = min(values)
     max_v = max(values)
@@ -44,7 +54,7 @@ def main():
     summary = {
         "region": "UK",
         "source": "NESO/UK Carbon Intensity API",
-        "window": "last_24h (half-hourly)",
+        "window": "API intensity/date response (half-hourly forecast)",
         "count_points": len(values),
         "min_g_per_kwh": round(min_v, 2),
         "avg_g_per_kwh": round(avg_v, 2),
