@@ -54,3 +54,16 @@ If auto-merge is not enabled, the workflow logs:
 - Uses `${{ secrets.GH_BOT_TOKEN }}` for checkout/push and GitHub CLI PR operations in the refresh workflow.
 - Does not print tokens or secret values in logs.
 - Fetch script calls only the public NESO API and stores no credentials.
+
+## v0.2.0 publication contract
+
+The daily/manual refresh workflow is the only automated evidence writer. It
+fetches canonical data, validates it, publishes mirrors using
+`workbook/evidence.py`, checks freshness and carbon budget, and opens or updates
+`automation/refresh-grid-intensity`. Required `carbon-budget` and
+`release-validation` checks gate merge. The previous workflow that pushed
+mirror commits directly to main has been removed. Manual scenario/probe changes
+must run the same publisher and include mirrors in their own reviewed PR.
+Invalid fetch results fail before replacing existing evidence. Refresh failure
+leaves the last published snapshot available with its original timestamp; the
+dashboard labels it historical after 48 hours and release validation fails.
