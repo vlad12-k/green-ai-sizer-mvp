@@ -3,8 +3,8 @@
   "source": "NESO/UK Carbon Intensity API",
   "window": "API intensity/date response (half-hourly forecast)",
   "count_points": 48,
-  "min_g_per_kwh": 78.0,
-  "avg_g_per_kwh": 189.88,
-  "max_g_per_kwh": 245.0,
-  "generated_utc": "2026-11-23T17:56:36.400466+00:00"
+  "min_g_per_kwh": 80.0,
+  "avg_g_per_kwh": 140.25,
+  "max_g_per_kwh": 174.0,
+  "generated_utc": "2026-11-24T17:32:27.744829+00:00"
 }
